@@ -27,8 +27,6 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 
 ---
 
-## Technical Pipeline Architecture
-
 ## 🛠️ Technical Pipeline Architecture
 
 ```text
