@@ -31,34 +31,27 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 
 ## 🛠️ Technical Pipeline Architecture
 
-> **Pipeline Overview:** Left-to-right data ingestion, statistical testing, advanced machine learning, and decision threshold optimization.
-
----
-
-### 🔄 End-to-End Workflow Diagram
-
-```mermaid
-flowchart LR
-    %% Row 1: Left to Right
-    subgraph Row1 [" "]
-        direction LR
-        P1["<b>1. Ingestion & QC</b><br/>• CDC BRFSS 2015<br/>• 253,680 × 22 rows<br/>• Schema validation<br/><i>Pandas • NumPy</i>"] 
-        --> 
-        P2["<b>2. Preprocessing</b><br/>• Missing value audit<br/>• Ordinal feature scaling<br/>• BMI skewness scaling<br/><i>Scikit-Learn</i>"]
-        --> 
-        P3["<b>3. Exploratory Data Analysis</b><br/>• Class prevalence (~17%)<br/>• Feature distributions<br/>• Correlation heatmaps<br/><i>Seaborn • Matplotlib</i>"]
-    end
-
-    %% Transition Row 1 to Row 2
-    P3 --> P4
-
-    %% Row 2: Right to Left / Bottom Layer
-    subgraph Row2 [" "]
-        direction LR
-        P4["<b>4. Hypothesis Testing</b><br/>• Chi-Square (χ²) tests<br/>• Odds Ratios (OR)<br/>• Baseline Logistic p-values<br/><i>SciPy • Statsmodels</i>"]
-        --> 
-        P5["<b>5. Modeling & Tuning</b><br/>• Stratified 80/20 split<br/>• Random Forest & XGBoost<br/>• Threshold shift (0.50 → 0.35)<br/><i>XGBoost • Scikit-Learn</i>"]
-    end
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                     TOP LAYER: DATA PREPARATION & EDA                                  │
+├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
+│ [ PHASE 1: INGESTION & QC ]           │ [ PHASE 2: PREPROCESSING ]        │ [ PHASE 3: EDA ]           │
+│ • CDC BRFSS 2015 (253,680 x 22)       │ • Null audit & deduplication      │ • Class balance (~17%)     │
+│ • Schema & data type validation       │ • Ordinal survey scaling          │ • Distribution plots       │
+│ • Memory check (~38 MB CSV)           │ • BMI continuous skewness check   │ • Correlation heatmaps     │
+│ 🛠️ Python 3.10+, Pandas, NumPy        │ 🛠️ Pandas, NumPy, Scikit-Learn    │ 🛠️ Matplotlib, Seaborn     │
+└───────────────────────────────────────┴───────────────────────────────────┴─────────────┬──────────────┘
+                                                                                          │
+                                                                                          ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                     BOTTOM LAYER: STATS, ML & EVALUATION                               │
+├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
+│ [ PHASE 4: HYPOTHESIS TESTING ]       │ [ PHASE 5: MODEL TRAINING ]       │ [ PHASE 6: EVALUATION ]    │
+│ • Chi-Square (χ²) categorical tests   │ • Stratified 80/20 train/test     │ • Optimize Recall / PR-AUC │
+│ • Odds Ratios (OR) calculation        │ • Baseline Logistic Regression    │ • Threshold shift (0.35)   │
+│ • Statsmodels inference & p-values    │ • XGBoost & Random Forest         │ • Final matrix validation  │
+│ 🛠️ SciPy, Statsmodels                 │ 🛠️ Scikit-Learn, XGBoost          │ 🛠️ Scikit-Learn Metrics    │
+└───────────────────────────────────────┴───────────────────────────────────┴────────────────────────────┘
 
     %% Styling
     classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px,font-size:11px;
