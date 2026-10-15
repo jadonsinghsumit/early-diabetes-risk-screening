@@ -51,7 +51,3 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 │ 🛠️ SciPy, Statsmodels                 │ 🛠️ Scikit-Learn, XGBoost          │ 🛠️ Scikit-Learn Metrics    │
 └───────────────────────────────────────┴───────────────────────────────────┴────────────────────────────┘
 
-    %% Styling
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px,font-size:11px;
-    classDef header fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,font-size:11px;
-    class P1,P2,P3,P4,P5 header;
