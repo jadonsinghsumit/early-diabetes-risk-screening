@@ -28,47 +28,14 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 ---
 
 ## Technical Pipeline Architecture
-===================================================================================================
-CDC DIABETES RISK SCREENING: END-TO-END TECHNICAL PIPELINE
-[ PHASE 1: DATA INGESTION & QUALITY CONTROL ]
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│ • Raw Source: CDC BRFSS 2015 Dataset (253,680 rows x 22 columns)                             │
-│ • Operations: Memory validation (~38 MB), schema verification, data type casting            │
-│ • Tech Stack: Python 3.10+, Pandas, NumPy                                                    │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
-│
-▼
-[ PHASE 2: DATA PREPROCESSING & CLEANING ]
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│ • Quality Audit: Zero missing values / record duplication checks                            │
-│ • Feature Encoding: Binary mapping, ordinal survey scaling (Age, GenHlth, Income)            │
-│ • Skewness Management: Continuous metric inspect & scaling (BMI)                            │
-│ • Tech Stack: Pandas, NumPy, Scikit-Learn                                                   │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
-│
-▼
-[ PHASE 3: EXPLORATORY DATA ANALYSIS (EDA) ]
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│ • Class Prevalence Audit: Verification of 17% positive class prevalence                     │
-│ • Visualizations: Distribution histograms, KDE plots, and correlation heatmaps               │
-│ • Tech Stack: Matplotlib, Seaborn                                                            │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
-│
-▼
-[ PHASE 4: HYPOTHESIS & STATISTICAL TESTING ]
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│ • Chi-Square Tests (χ²): Independence testing on categorical factors (HighBP, HighChol)     │
-│ • Odds Ratios (OR): Risk quantification for key clinical predictors                          │
-│ • Model Inference: Logistic Regression p-value and coefficient evaluation                    │
-│ • Tech Stack: SciPy (scipy.stats), Statsmodels                                               │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
-│
-▼
-[ PHASE 5: MODEL TRAINING & THRESHOLD OPTIMIZATION ]
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│ • Stratified Split: 80/20 train/test split preserving target class ratio                     │
-│ • Algorithms: Logistic Regression, Random Forest, XGBoost Classifier                         │
-│ • Imbalance Handling: Class weighting (scale_pos_weight / class_weight='balanced')       │
-│ • Decision Tuning: Probability threshold shifting (0.50 -> 0.35) for max Sensitivity         │
-│ • Tech Stack: Scikit-Learn, XGBoost                                                         │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
+
+```mermaid
+flowchart TD
+    A["<b>PHASE 1: Data Ingestion & Quality Control</b><br/>• CDC BRFSS 2015 Dataset (253,680 rows × 22 cols)<br/>• Schema validation & memory optimization (~38 MB)<br/>• <i>Tech Stack: Python 3.10+, Pandas, NumPy</i>"] 
+    --> B["<b>PHASE 2: Data Preprocessing & Cleaning</b><br/>• Missing value audit & duplicate checks<br/>• Variable encoding & ordinal survey scaling<br/>• Continuous feature inspection & BMI scaling<br/>• <i>Tech Stack: Pandas, NumPy, Scikit-Learn</i>"]
+
+    B --> C["<b>PHASE 3: Exploratory Data Analysis (EDA)</b><br/>• Verification of ~17% positive class prevalence<br/>• Distribution histograms, KDE plots & heatmaps<br/>• <i>Tech Stack: Matplotlib, Seaborn</i>"]
+
+    C --> D["<b>PHASE 4: Hypothesis & Statistical Testing</b><br/>• Chi-Square (χ²) tests for categorical factors<br/>• Odds Ratios (OR) for clinical risk factors<br/>• Logistic Regression p-values & statsmodels<br/>• <i>Tech Stack: SciPy (scipy.stats), Statsmodels</i>"]
+
+    D --> E["<b>PHASE 5: Model Training & Threshold Optimization</b><br/>• Stratified 80/20 Train/Test Split<br/>• Logistic Regression, Random Forest & XGBoost<br/>• Imbalance handling (scale_pos_weight / class_weight)<br/>• Threshold adjustment (0.50 → 0.35) for max Sensitivity<br/>• <i>Tech Stack: Scikit-Learn, XGBoost</i>"]
