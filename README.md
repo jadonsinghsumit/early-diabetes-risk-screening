@@ -29,13 +29,38 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 
 ## Technical Pipeline Architecture
 
+## 🛠️ Technical Pipeline Architecture
+
+> **Pipeline Overview:** Left-to-right data ingestion, statistical testing, advanced machine learning, and decision threshold optimization.
+
+---
+
+### 🔄 End-to-End Workflow Diagram
+
 ```mermaid
-flowchart TD
-    A["<b>PHASE 1: Data Ingestion & Quality Control</b><br/>• CDC BRFSS 2015 Dataset (253,680 rows × 22 cols)<br/>• Schema validation & memory optimization (~38 MB)<br/>• <i>Tech Stack: Python 3.10+, Pandas, NumPy</i>"] 
-    --> B["<b>PHASE 2: Data Preprocessing & Cleaning</b><br/>• Missing value audit & duplicate checks<br/>• Variable encoding & ordinal survey scaling<br/>• Continuous feature inspection & BMI scaling<br/>• <i>Tech Stack: Pandas, NumPy, Scikit-Learn</i>"]
+flowchart LR
+    %% Row 1: Left to Right
+    subgraph Row1 [" "]
+        direction LR
+        P1["<b>1. Ingestion & QC</b><br/>• CDC BRFSS 2015<br/>• 253,680 × 22 rows<br/>• Schema validation<br/><i>Pandas • NumPy</i>"] 
+        --> 
+        P2["<b>2. Preprocessing</b><br/>• Missing value audit<br/>• Ordinal feature scaling<br/>• BMI skewness scaling<br/><i>Scikit-Learn</i>"]
+        --> 
+        P3["<b>3. Exploratory Data Analysis</b><br/>• Class prevalence (~17%)<br/>• Feature distributions<br/>• Correlation heatmaps<br/><i>Seaborn • Matplotlib</i>"]
+    end
 
-    B --> C["<b>PHASE 3: Exploratory Data Analysis (EDA)</b><br/>• Verification of ~17% positive class prevalence<br/>• Distribution histograms, KDE plots & heatmaps<br/>• <i>Tech Stack: Matplotlib, Seaborn</i>"]
+    %% Transition Row 1 to Row 2
+    P3 --> P4
 
-    C --> D["<b>PHASE 4: Hypothesis & Statistical Testing</b><br/>• Chi-Square (χ²) tests for categorical factors<br/>• Odds Ratios (OR) for clinical risk factors<br/>• Logistic Regression p-values & statsmodels<br/>• <i>Tech Stack: SciPy (scipy.stats), Statsmodels</i>"]
+    %% Row 2: Right to Left / Bottom Layer
+    subgraph Row2 [" "]
+        direction LR
+        P4["<b>4. Hypothesis Testing</b><br/>• Chi-Square (χ²) tests<br/>• Odds Ratios (OR)<br/>• Baseline Logistic p-values<br/><i>SciPy • Statsmodels</i>"]
+        --> 
+        P5["<b>5. Modeling & Tuning</b><br/>• Stratified 80/20 split<br/>• Random Forest & XGBoost<br/>• Threshold shift (0.50 → 0.35)<br/><i>XGBoost • Scikit-Learn</i>"]
+    end
 
-    D --> E["<b>PHASE 5: Model Training & Threshold Optimization</b><br/>• Stratified 80/20 Train/Test Split<br/>• Logistic Regression, Random Forest & XGBoost<br/>• Imbalance handling (scale_pos_weight / class_weight)<br/>• Threshold adjustment (0.50 → 0.35) for max Sensitivity<br/>• <i>Tech Stack: Scikit-Learn, XGBoost</i>"]
+    %% Styling
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px,font-size:11px;
+    classDef header fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,font-size:11px;
+    class P1,P2,P3,P4,P5 header;
