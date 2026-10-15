@@ -28,3 +28,47 @@ Our primary objective is to optimize predictive models for **Sensitivity/Recall*
 ---
 
 ## Technical Pipeline Architecture
+===================================================================================================
+CDC DIABETES RISK SCREENING: END-TO-END TECHNICAL PIPELINE
+[ PHASE 1: DATA INGESTION & QUALITY CONTROL ]
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ • Raw Source: CDC BRFSS 2015 Dataset (253,680 rows x 22 columns)                             │
+│ • Operations: Memory validation (~38 MB), schema verification, data type casting            │
+│ • Tech Stack: Python 3.10+, Pandas, NumPy                                                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+│
+▼
+[ PHASE 2: DATA PREPROCESSING & CLEANING ]
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ • Quality Audit: Zero missing values / record duplication checks                            │
+│ • Feature Encoding: Binary mapping, ordinal survey scaling (Age, GenHlth, Income)            │
+│ • Skewness Management: Continuous metric inspect & scaling (BMI)                            │
+│ • Tech Stack: Pandas, NumPy, Scikit-Learn                                                   │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+│
+▼
+[ PHASE 3: EXPLORATORY DATA ANALYSIS (EDA) ]
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ • Class Prevalence Audit: Verification of 17% positive class prevalence                     │
+│ • Visualizations: Distribution histograms, KDE plots, and correlation heatmaps               │
+│ • Tech Stack: Matplotlib, Seaborn                                                            │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+│
+▼
+[ PHASE 4: HYPOTHESIS & STATISTICAL TESTING ]
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ • Chi-Square Tests (χ²): Independence testing on categorical factors (HighBP, HighChol)     │
+│ • Odds Ratios (OR): Risk quantification for key clinical predictors                          │
+│ • Model Inference: Logistic Regression p-value and coefficient evaluation                    │
+│ • Tech Stack: SciPy (scipy.stats), Statsmodels                                               │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+│
+▼
+[ PHASE 5: MODEL TRAINING & THRESHOLD OPTIMIZATION ]
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ • Stratified Split: 80/20 train/test split preserving target class ratio                     │
+│ • Algorithms: Logistic Regression, Random Forest, XGBoost Classifier                         │
+│ • Imbalance Handling: Class weighting (scale_pos_weight / class_weight='balanced')       │
+│ • Decision Tuning: Probability threshold shifting (0.50 -> 0.35) for max Sensitivity         │
+│ • Tech Stack: Scikit-Learn, XGBoost                                                         │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
