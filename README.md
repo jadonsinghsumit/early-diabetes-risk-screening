@@ -1,6 +1,8 @@
 # Prediabetes Risk Screening
 
-This project focuses on identifying **self-reported prediabetes among adults without existing diabetes**, using health and lifestyle indicators from the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests. Project lead: Sumit Singh Jadaun; teammates: Priyamvadha and Amiya.
+This project focuses on identifying **self-reported prediabetes among adults without existing diabetes**, using health and lifestyle indicators from the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests. 
+Project lead: Sumit Singh Jadaun
+Teammates: Priyamvadha and Amiya.
 
 The uploaded `Diabetes_012` table has 253,680 rows. The primary endpoint is explicit:
 
@@ -14,7 +16,7 @@ The resulting cohort has **218,334 respondents**, with **2.12% positive labels**
 
 ## Install
 
-Python 3.12 is tested. The package supports Python 3.10+; the exact dependency snapshot targets Python 3.12 on Linux.
+Python 3.12+. The package supports Python 3.12+; the exact dependency snapshot targets Python 3.12 on Linux.
 
 ```bash
 python3.12 -m venv .venv
