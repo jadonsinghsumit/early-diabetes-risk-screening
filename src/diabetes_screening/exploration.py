@@ -8,6 +8,7 @@ import pandas as pd
 import seaborn as sns
 
 from .schema import FIELDS, TARGET
+from .endpoints import LABELS
 
 DISTRIBUTIONS = ["BMI", "Age", "MentHlth", "PhysHlth", "GenHlth"]
 
@@ -26,8 +27,7 @@ def explore(frame, destination, endpoint="combined"):
     balance.index.name = TARGET
     balance.to_csv(destination / "class_balance.csv")
     figure, axis = plt.subplots(figsize=(6, 4))
-    labels = (["No diabetes", "Prediabetes or diabetes"] if endpoint == "combined"
-              else ["No diabetes or prediabetes", "Diabetes"])
+    labels = LABELS[endpoint]
     axis.bar(labels, counts)
     axis.set_ylabel("Respondents")
     axis.set_title("Class balance in the analysis table (unweighted)")

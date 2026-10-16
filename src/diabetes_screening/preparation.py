@@ -7,14 +7,11 @@ import zipfile
 import pandas as pd
 
 from .cleaning import clean_data
+from .endpoints import ENDPOINTS
 from .ingestion import DataQualityError, write_json
 from .schema import COLUMNS, EXPECTED_ROWS, TARGET
 
 THREE_CLASS_FILE = "diabetes_012_health_indicators_BRFSS2015.csv"
-ENDPOINTS = {
-    "combined": {0: 0, 1: 1, 2: 1},
-    "diabetes-only": {0: 0, 1: 0, 2: 1},
-}
 
 
 def prepare_binary(source, destination, endpoint, expected_rows=EXPECTED_ROWS):
@@ -44,6 +41,8 @@ def prepare_binary(source, destination, endpoint, expected_rows=EXPECTED_ROWS):
     original_counts = frame["Diabetes_012"].value_counts().sort_index()
     frame = frame.rename(columns={"Diabetes_012": TARGET})
     frame[TARGET] = frame[TARGET].map(ENDPOINTS[endpoint])
+    excluded_rows = int(frame[TARGET].isna().sum())
+    frame = frame.loc[frame[TARGET].notna()].copy()
     cleaned, _ = clean_data(frame)
     destination.parent.mkdir(parents=True, exist_ok=True)
     cleaned.to_csv(destination, index=False)
@@ -55,8 +54,10 @@ def prepare_binary(source, destination, endpoint, expected_rows=EXPECTED_ROWS):
         "endpoint": endpoint, "label_mapping": ENDPOINTS[endpoint],
         "original_target_counts": {str(int(k)): int(v) for k, v in original_counts.items()},
         "derived_target_counts": {str(k): int(v) for k, v in cleaned[TARGET].value_counts().sort_index().items()},
+        "source_rows": expected_rows, "excluded_rows": excluded_rows,
+        "exclusion_reason": "Existing diabetes excluded from prediabetes cohort" if excluded_rows else "None",
         "rows": len(cleaned), "columns": len(cleaned.columns),
-        "derivation": "User-uploaded three-class BRFSS2015 file; explicit binary recoding, no dropped rows",
+        "derivation": "User-uploaded three-class BRFSS2015 file; explicit endpoint mapping and recorded exclusions",
         "is_official_binary_file": False,
     }
     write_json(sidecar, metadata)

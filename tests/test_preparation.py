@@ -67,3 +67,40 @@ def test_diabetes_only_analysis_labels_endpoint(sample, tmp_path):
                           provenance=prepared.with_suffix(".provenance.json"))
     assert result["endpoint"] == "diabetes-only"
     assert "diabetes-only" in (tmp_path / "results/eda/observations.md").read_text()
+
+
+def test_prediabetes_excludes_existing_diabetes_without_losing_controls(sample, tmp_path):
+    source = tmp_path / "three.csv"
+    original = three_class_csv(sample)
+    original.to_csv(source, index=False)
+    output = tmp_path / "prediabetes.csv"
+    metadata = prepare_binary(source, output, "prediabetes", expected_rows=160)
+    import pandas as pd
+    prepared = pd.read_csv(output)
+    assert metadata["source_rows"] == 160 and metadata["excluded_rows"] == 40
+    assert metadata["rows"] == 120
+    assert metadata["derived_target_counts"] == {"0": 80, "1": 40}
+    assert metadata["label_mapping"][2] is None
+    expected = original.loc[original.Diabetes_012 != 2].rename(columns={"Diabetes_012": "Diabetes_binary"})
+    pd.testing.assert_frame_equal(prepared, expected.reset_index(drop=True))
+    result = run_analysis(output, tmp_path / "run", expected_rows=160,
+                          provenance=output.with_suffix(".provenance.json"))
+    assert result["analysis_rows"] == 120
+    assert result["expected_rows"] == 120 and result["expected_source_rows"] == 160
+    assert result["endpoint"] == "prediabetes"
+    assert result["tests_executed"] == 25
+    dictionary = pd.read_csv(tmp_path / "run/data_dictionary.csv")
+    assert "existing diabetes excluded" in dictionary.loc[dictionary.name == "Diabetes_binary", "description"].iloc[0]
+
+
+def test_tampered_endpoint_metadata_is_rejected(sample, tmp_path):
+    source = tmp_path / "three.csv"
+    three_class_csv(sample).to_csv(source, index=False)
+    output = tmp_path / "prediabetes.csv"
+    prepare_binary(source, output, "prediabetes", expected_rows=160)
+    sidecar = output.with_suffix(".provenance.json")
+    metadata = json.loads(sidecar.read_text())
+    metadata["label_mapping"]["2"] = 1
+    sidecar.write_text(json.dumps(metadata))
+    with pytest.raises(ValueError, match="inconsistent"):
+        run_analysis(output, tmp_path / "run", expected_rows=160, provenance=sidecar)

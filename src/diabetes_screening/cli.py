@@ -6,6 +6,7 @@ import urllib.error
 import zipfile
 
 from .download import download_source
+from .endpoints import ENDPOINTS
 from .pipeline import run_analysis
 from .preparation import prepare_binary
 from .schema import EXPECTED_ROWS, FILENAME
@@ -19,7 +20,7 @@ def main(argv=None):
     prepare = commands.add_parser("prepare", help="Derive an explicitly labelled binary CSV from three-class input")
     prepare.add_argument("--input", required=True, type=Path)
     prepare.add_argument("--output", required=True, type=Path)
-    prepare.add_argument("--endpoint", required=True, choices=["combined", "diabetes-only"])
+    prepare.add_argument("--endpoint", required=True, choices=list(ENDPOINTS))
     run = commands.add_parser("run", help="Validate, clean, explore, and test associations")
     run.add_argument("--input", required=True, type=Path)
     run.add_argument("--output", required=True, type=Path, help="New directory; existing paths are never overwritten")
