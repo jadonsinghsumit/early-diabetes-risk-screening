@@ -18,7 +18,7 @@ def _save(figure, path):
     plt.close(figure)
 
 
-def explore(frame, destination):
+def explore(frame, destination, endpoint="combined"):
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     counts = frame[TARGET].value_counts().reindex([0, 1], fill_value=0)
@@ -26,7 +26,9 @@ def explore(frame, destination):
     balance.index.name = TARGET
     balance.to_csv(destination / "class_balance.csv")
     figure, axis = plt.subplots(figsize=(6, 4))
-    axis.bar(["No diabetes", "Prediabetes or diabetes"], counts)
+    labels = (["No diabetes", "Prediabetes or diabetes"] if endpoint == "combined"
+              else ["No diabetes or prediabetes", "Diabetes"])
+    axis.bar(labels, counts)
     axis.set_ylabel("Respondents")
     axis.set_title("Class balance in the analysis table (unweighted)")
     _save(figure, destination / "class_balance.png")
@@ -69,6 +71,7 @@ def explore(frame, destination):
     medians = frame.groupby(TARGET)[DISTRIBUTIONS].median()
     observations = ["# Exploratory observations", "",
                     f"Analysis cohort: {len(frame):,} rows; positive fraction: {prevalence:.2%}.",
+                    f"Binary endpoint: {endpoint}.",
                     "This is the observed table fraction, not a survey-weighted population estimate.", ""]
     if {0, 1}.issubset(medians.index):
         for column in DISTRIBUTIONS:
