@@ -1,24 +1,17 @@
 # Verification record
 
-Validated in the cloud checkout with Python 3.12.14 and `requirements.lock`.
+The implementation was migrated to `jadonsinghsumit/early-diabetes-risk-screening`, branch `sumit-dev-test`, retaining incremental stage commits. The destination's pre-existing overview is preserved in `docs/original-project-overview.md`.
 
-- Unit and integration suite: 27 passing tests; source statement coverage above 98%, with an enforced minimum of 80%.
-- `pip check`: no broken dependency requirements.
-- Packaging: source distribution and wheel built successfully with `python -m build`.
-- CLI integration: a deterministic small synthetic fixture exercised all four stages, checked outputs, and verified explicit failure and overwrite protection.
-- Scale check: a separate, explicitly synthetic 253,680-row × 22-column fixture completed all four stages, produced nine figures, and executed all 25 planned tests with zero skips. Output shape, synthetic provenance label, and adjusted p-value completeness were checked. This validates workflow execution at the requested scale, not actual BRFSS findings.
-- Synthetic test data uses fixed seeds; production analyses contain no random sampling. The source hash and installed package versions are captured in each successful manifest.
+Validated on Python 3.12.14 using `requirements.lock`:
 
-## Remaining real-data validation
+- 32 unit/integration tests passed; source statement coverage 98.31%, with an 80% enforced minimum.
+- Tests cover archive selection, schema and invalid values, conservative cleaning, known odds ratios, tied-rank effects, BH correction and skipped tests, plots, CLI orchestration, three-class preparation, endpoint direction, and source-hash mismatch rejection.
+- Actual uploaded data completed all four stages: 253,680 × 22, zero missing or invalid values, 23,968 repeated profiles retained, 25 statistical tests executed, zero skipped, nine figures generated.
+- Combined endpoint: 213,703 negatives and 39,977 positives (15.76%). Original class counts: 0=213,703; 1=4,631; 2=35,346. Conversion is explicit and is not represented as the official binary dataset.
+- Earlier full-shape synthetic scale validation also passed; it is superseded by the actual uploaded-data run for this endpoint.
 
-The public UCI and Kaggle endpoints returned HTTP 403 through the cloud egress proxy. The required domains were saved in the environment configuration draft, but draft persistence does not activate network access. No real source CSV was available in this checkout. The downloader's archive handling is unit tested; a live download and the actual source-cohort analysis remain unverified. There are no claimed BRFSS prevalence estimates, real-data charts, or empirical association findings in this commit.
+Review [the saved run](../reports/uploaded-combined/README.md), its `source_provenance.json`, `quality.json`, `cleaning.json`, `manifest.json`, hypothesis table and EDA files. Raw/cleaned row-level CSVs remain ignored; only aggregate reports, hashes and charts are committed. Repeat the README preparation/run commands using fresh output names to compare results.
 
-Enable `archive.ics.uci.edu` in environment settings and apply the network change, or place the requested Kaggle CSV locally. Then follow the README download/run commands without `--synthetic-rows`. Review:
+UCI and Kaggle live downloads still return HTTP 403 in this machine. That blocks independent upstream binary-file validation, not analysis of the provided three-class upload. Input hashing establishes file identity, not independent upstream authenticity. The year discrepancy in source documentation and survey-design limitations remain documented.
 
-1. `quality.json`: source hash, 253,680 rows, 22 columns, target counts, invalid/missing codes, duplicate count.
-2. `cleaning.json`: default duplicate policy, unchanged row count and original codes, BMI/health-day summaries.
-3. `eda/observations.md`, charts and CSVs: actual table fraction and target-group comparisons.
-4. `hypotheses.csv`: 25 planned tests, execution status, raw/BH p-values, effect direction, interval methods, sparse-cell notes.
-5. `manifest.json`: this exists only after successful completion; check source provenance and package versions.
-
-The test suite reports upstream Seaborn/Matplotlib deprecation warnings; they do not fail the tests or suppress checks. CI is configured to repeat verification on pushes/PRs, but a remote CI result is not claimed here. No work on roadmap stages 5–8 has been included.
+Seaborn/Matplotlib deprecation warnings remain upstream warnings; tests and checks are not suppressed. Remote CI has not been claimed as passed. Stages 5–8 and newer raw-survey harmonization remain outside scope.

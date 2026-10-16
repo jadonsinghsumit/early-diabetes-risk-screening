@@ -18,7 +18,26 @@ python -m pip check
 
 For other supported Python versions, use `python -m pip install -e '.[dev]'` so pip can resolve compatible versions. The existing cloud checkout can be used directly; no separate worktree is needed.
 
-## Obtain the data
+## Uploaded dataset: verified run
+
+The supplied archive contains `Diabetes_012`, not the original binary file. The checked-in [uploaded-data report](reports/uploaded-combined/README.md) uses the explicitly derived **combined** endpoint: 0 → 0, prediabetes (1) → 1, diabetes (2) → 1. This retains 253,680 rows and yields 39,977 positives (15.76%). It is not presented as the upstream binary CSV.
+
+```bash
+diabetes-screening prepare \
+  --input data/raw/diabetes_012_health_indicators_BRFSS2015.csv.zip \
+  --output data/derived/diabetes_combined_derived_BRFSS2015.csv \
+  --endpoint combined
+diabetes-screening run \
+  --input data/derived/diabetes_combined_derived_BRFSS2015.csv \
+  --provenance data/derived/diabetes_combined_derived_BRFSS2015.provenance.json \
+  --output outputs/uploaded-combined
+```
+
+Use fresh output paths when repeating a run. Both the ZIP and derived CSV remain ignored local files. The provenance sidecar records original class counts, mapping, archive/member hashes and the derived CSV hash; `run --provenance` verifies the input hash. `--endpoint diabetes-only` is a separate scientific endpoint and labels code 2 alone positive. Do not compare its results as if the endpoints were identical.
+
+The [original project overview](docs/original-project-overview.md) is retained as historical context; current methods and measured counts below supersede its initial prevalence and pipeline assumptions. Newer raw BRFSS releases require separate derivation, codebooks, and year-specific validation; they are not silently mixed into this 2015 analysis.
+
+## Obtain the original binary data (separate workflow)
 
 ```bash
 diabetes-screening download
@@ -61,4 +80,4 @@ Tests cover source contracts, invalid and missing values, duplicates, safe archi
 
 For a small explicitly synthetic CSV with the same columns, `--synthetic-rows N` bypasses the production row count and labels all outputs synthetic. **Never use synthetic results as project findings.** Normal runs require the full source shape.
 
-Current verification and the remaining real-data check are recorded in [validation notes](docs/validation.md). Generated figures, raw/cleaned CSVs, coverage reports, and build outputs stay outside Git. Stages 5–8 remain future work; full-cohort exploration must not later be used to tune a held-out evaluation set.
+Current verification and remaining upstream-download limitations are recorded in [validation notes](docs/validation.md). Generated figures, raw/cleaned CSVs, coverage reports, and build outputs stay outside Git. Stages 5–8 remain future work; full-cohort exploration must not later be used to tune a held-out evaluation set.

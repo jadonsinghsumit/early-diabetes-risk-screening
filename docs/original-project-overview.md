@@ -1,3 +1,5 @@
+> Archived pre-migration overview. This preserves existing project context; current README, source provenance, and measured results supersede its initial target/prevalence and implementation assumptions.
+
 # Early Population Diabetes Risk Screening via CDC Survey Indicators
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
