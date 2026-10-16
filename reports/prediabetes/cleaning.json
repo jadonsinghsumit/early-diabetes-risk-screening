@@ -1,0 +1,48 @@
+{
+  "input_rows": 218334,
+  "output_rows": 218334,
+  "duplicate_policy": "keep",
+  "duplicate_rows": 23650,
+  "missingness_policy": "Fail on missing values; never silently drop or impute respondents",
+  "invalid_values_policy": "Fail on noninteger, nonfinite, out-of-codebook values",
+  "duplicate_rationale": "Identical profiles may be different respondents; no respondent IDs are available",
+  "transformations": "Preserve original codes and BMI/health days; no clipping, scaling, or balancing",
+  "distribution_summary": {
+    "BMI": {
+      "count": 218334.0,
+      "mean": 27.80577005871738,
+      "std": 6.291413809060435,
+      "min": 12.0,
+      "1%": 18.0,
+      "25%": 24.0,
+      "50%": 27.0,
+      "75%": 31.0,
+      "99%": 48.0,
+      "max": 98.0
+    },
+    "MentHlth": {
+      "count": 218334.0,
+      "mean": 2.978033654859069,
+      "std": 7.1118649948599435,
+      "min": 0.0,
+      "1%": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 2.0,
+      "99%": 30.0,
+      "max": 30.0
+    },
+    "PhysHlth": {
+      "count": 218334.0,
+      "mean": 3.6410820119633223,
+      "std": 8.06459989307032,
+      "min": 0.0,
+      "1%": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 2.0,
+      "99%": 30.0,
+      "max": 30.0
+    }
+  }
+}

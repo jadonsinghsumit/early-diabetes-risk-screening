@@ -1,3 +1,5 @@
+> Historical combined-endpoint run. The primary objective is now prediabetes among adults without existing diabetes; use [the prediabetes report](../prediabetes/README.md).
+
 # Analysis run
 
 Input SHA-256: `7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f`.

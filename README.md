@@ -1,12 +1,20 @@
-# Early Diabetes Risk Screening
+# Prediabetes Risk Screening
 
-A reproducible research workflow for the **first four roadmap stages**: ingestion and quality control, conservative cleaning, exploratory analysis, and association tests. Project lead: Sumit Singh Jadaun; teammates: Priyamvadha and Amiya.
+This project focuses on identifying **self-reported prediabetes among adults without existing diabetes**, using health and lifestyle indicators from the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests. Project lead: Sumit Singh Jadaun; teammates: Priyamvadha and Amiya.
 
-Use the full `diabetes_binary_health_indicators_BRFSS2015.csv`: **253,680 rows × 22 columns**. Positive labels combine self-reported prediabetes and diabetes. This is a research analysis, not a diagnosis tool. No predictive models, train/test splits, threshold selection, or clinical performance claims are included yet.
+The uploaded `Diabetes_012` table has 253,680 rows. The primary endpoint is explicit:
+
+| Original label | Meaning | Analysis decision |
+| --- | --- | --- |
+| 0 | No diabetes | Retain as negative: 213,703 respondents |
+| 1 | Prediabetes | Retain as positive: 4,631 respondents |
+| 2 | Existing diabetes | Exclude: 35,346 respondents |
+
+The resulting cohort has **218,334 respondents**, with **2.12% positive labels**. Existing diabetes is not treated as a healthy negative or merged into the positive group. Survey labels are self-reported; this cross-sectional dataset does not establish who will develop diabetes later. A future-onset prediction claim needs longitudinal outcomes. This is a research prototype, not a diagnostic tool, and no predictive model has been trained in stages 1–4.
 
 ## Install
 
-Python 3.12 is the tested environment. The package supports Python 3.10+; the exact dependency snapshot targets Python 3.12 on Linux.
+Python 3.12 is tested. The package supports Python 3.10+; the exact dependency snapshot targets Python 3.12 on Linux.
 
 ```bash
 python3.12 -m venv .venv
@@ -16,68 +24,55 @@ python -m pip install --no-deps -e .
 python -m pip check
 ```
 
-For other supported Python versions, use `python -m pip install -e '.[dev]'` so pip can resolve compatible versions. The existing cloud checkout can be used directly; no separate worktree is needed.
+For other supported Python versions, use `python -m pip install -e '.[dev]'` to resolve compatible dependencies. Use the existing cloud checkout directly; a separate worktree is unnecessary.
 
-## Uploaded dataset: verified run
+## Prepare the primary cohort and run stages 1–4
 
-The supplied archive contains `Diabetes_012`, not the original binary file. The checked-in [uploaded-data report](reports/uploaded-combined/README.md) uses the explicitly derived **combined** endpoint: 0 → 0, prediabetes (1) → 1, diabetes (2) → 1. This retains 253,680 rows and yields 39,977 positives (15.76%). It is not presented as the upstream binary CSV.
+Place the supplied three-class ZIP under `data/raw/`, then run:
 
 ```bash
 diabetes-screening prepare \
   --input data/raw/diabetes_012_health_indicators_BRFSS2015.csv.zip \
-  --output data/derived/diabetes_combined_derived_BRFSS2015.csv \
-  --endpoint combined
+  --output data/derived/prediabetes_BRFSS2015.csv \
+  --endpoint prediabetes
+
 diabetes-screening run \
-  --input data/derived/diabetes_combined_derived_BRFSS2015.csv \
-  --provenance data/derived/diabetes_combined_derived_BRFSS2015.provenance.json \
-  --output outputs/uploaded-combined
+  --input data/derived/prediabetes_BRFSS2015.csv \
+  --provenance data/derived/prediabetes_BRFSS2015.provenance.json \
+  --output outputs/prediabetes
 ```
 
-Use fresh output paths when repeating a run. Both the ZIP and derived CSV remain ignored local files. The provenance sidecar records original class counts, mapping, archive/member hashes and the derived CSV hash; `run --provenance` verifies the input hash. `--endpoint diabetes-only` is a separate scientific endpoint and labels code 2 alone positive. Do not compare its results as if the endpoints were identical.
+Choose **new paths** when repeating preparation or analysis; existing outputs are never overwritten. The source must contain all 253,680 rows and the exact three-class schema. The provenance records source/archive-member hashes, source counts, exclusions, mapping and the derived input hash. Analysis verifies the derived hash, mapping, cohort size and label counts. It accepts the smaller cohort through this provenance, without using a synthetic row-count bypass. The legacy internal column name `Diabetes_binary` stores the prepared 0/1 outcome; the report's endpoint and dictionary define its meaning.
 
-The [original project overview](docs/original-project-overview.md) is retained as historical context; current methods and measured counts below supersede its initial prevalence and pipeline assumptions. Newer raw BRFSS releases require separate derivation, codebooks, and year-specific validation; they are not silently mixed into this 2015 analysis.
+Raw and cleaned row-level files stay ignored locally. The [checked-in primary report](reports/prediabetes/README.md) contains aggregate data, charts, provenance and methods. No credentials or background services are required for a local run. A fresh Git clone needs the uploaded source file; Git contains only aggregate reports.
 
-## Obtain the original binary data (separate workflow)
+## Review the outputs
 
-```bash
-diabetes-screening download
-```
-
-This downloads the public UCI archive over verified HTTPS and selects only the exact binary filename. It refuses to overwrite an existing file. Network access to `archive.ics.uci.edu` is needed. Alternatively, download the source from [Kaggle](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset) and place the full binary CSV under `data/raw/`. Do not use the balanced or three-level file. Raw data is intentionally excluded from Git.
-
-See [source provenance and the survey-year discrepancy](docs/sources.md). Shape checks identify the expected variant but do not authenticate its derivation; review the source and retain the SHA-256 in the run report.
-
-## Run stages 1–4
-
-```bash
-diabetes-screening run \
-  --input data/raw/diabetes_binary_health_indicators_BRFSS2015.csv \
-  --output outputs/baseline
-```
-
-Every run needs a **new output directory**, preventing accidental overwrites or stale success markers. A failure returns a nonzero exit code. The success manifest is written only after all four stages finish. No credentials or background services are required to analyze a local CSV.
-
-| Stage | Outputs | What to verify |
+| Stage | Outputs | Verification |
 | --- | --- | --- |
-| 1 | `quality.json`, `data_dictionary.csv` | 253,680 × 22 input, exact columns, dtype/range/label audit, input SHA-256 |
-| 2 | `cleaned.csv`, `cleaning.json` | Default row count preserved, duplicates audited, original codes and class balance retained |
-| 3 | `eda/*.png`, descriptive CSVs, `eda/observations.md` | Actual positive fraction, group summaries, distributions, categorical factors, Pearson/Spearman matrices |
-| 4 | `hypotheses.csv` | 25 planned tests, explicit skips, H0/H1, p-values, BH correction, effects, intervals and limitations |
-| Run | `manifest.json`, output `README.md` | Source hash, dependency versions, analysis mode, actual test/skip counts |
+| 1 | `quality.json`, `data_dictionary.csv`, `source_provenance.json` | Full source 253,680 → eligible cohort 218,334; source hashes, labels and feature audit |
+| 2 | `cleaned.csv`, `cleaning.json` | Eligible rows retained; duplicates audited; no hidden imputation, scaling, clipping or balancing |
+| 3 | `eda/*.png`, summary CSVs, `eda/observations.md` | Observed 2.12% positive fraction, distributions and groups, categorical factors, Pearson/Spearman matrices |
+| 4 | `hypotheses.csv` | 25 planned tests; H0/H1, status, raw/BH p-values, effects, intervals and sparse-cell notes |
+| Run | `manifest.json`, run `README.md` | Endpoint is `prediabetes`; cohort/source counts, dependency versions and execution/skip counts |
 
-Duplicates are retained because matching profiles may represent different respondents. Missing or invalid values stop cleaning rather than triggering hidden imputation or row deletion. To run a separate duplicate sensitivity analysis, choose another output directory and add `--duplicates drop`. Read [cleaning decisions](docs/cleaning.md), [exploration notes](docs/exploration.md), and [statistical methods](docs/statistics.md) before interpreting results.
+The success manifest is written after all four stages finish. Errors return a nonzero exit status. Missing or invalid included values stop cleaning; no automatic row deletion or imputation occurs. Identical profiles are retained because no respondent identifier establishes accidental duplication. `--duplicates drop` provides a separate sensitivity run and must use a fresh output directory.
 
-Binary predictors receive odds ratios and 95% intervals. Multilevel predictors receive omnibus Cramer's V (CI not estimated, explicitly labelled). Selected numeric/ordinal comparisons receive rank-biserial effects and approximate 95% intervals. Sparse chi-square cells are flagged. Tests are unadjusted for confounding and survey design; BH-adjusted p-values do not make the associations causal.
+Read the [sources](docs/sources.md), [cleaning decisions](docs/cleaning.md), [exploration notes](docs/exploration.md), and [statistical methods](docs/statistics.md). Tests are exploratory, unadjusted for confounding and unavailable survey design; associations do not establish causation or clinical performance. Odds ratios concern this prediabetes endpoint. Mann–Whitney effects have approximate placement intervals; multilevel Cramer's V has no estimated CI and is labelled accordingly. Tiny p-values can underflow to zero.
 
-## Verify the implementation
+## Verify the code
 
 ```bash
 python -m pytest
 python -m build
 ```
 
-Tests cover source contracts, invalid and missing values, duplicates, safe archive selection, known odds-ratio calculations, tied ranks, correction and skip behavior, chart/table generation, and the CLI end to end. Pytest enforces **at least 80% source statement coverage** and writes `coverage.xml`. CI repeats tests, dependency checks, and packaging on Python 3.12. Network access and real source data are not needed for the synthetic test suite.
+**34 tests passed with 98.11% source statement coverage** in the current validation. Pytest enforces at least 80% and writes `coverage.xml`. Unit and integration tests include explicit exclusion of existing diabetes, retention of controls and prediabetes cases, provenance checks, known statistical calculations, missing/invalid data, chart generation and CLI behavior. CI repeats checks on Python 3.12; a remote CI result is not claimed here. See [validation details](docs/validation.md).
 
-For a small explicitly synthetic CSV with the same columns, `--synthetic-rows N` bypasses the production row count and labels all outputs synthetic. **Never use synthetic results as project findings.** Normal runs require the full source shape.
+## Other endpoints and data sources
 
-Current verification and remaining upstream-download limitations are recorded in [validation notes](docs/validation.md). Generated figures, raw/cleaned CSVs, coverage reports, and build outputs stay outside Git. Stages 5–8 remain future work; full-cohort exploration must not later be used to tune a held-out evaluation set.
+`prepare --endpoint combined` and `--endpoint diabetes-only` remain explicit alternatives for comparison, not the primary objective. The [earlier combined-endpoint report](reports/uploaded-combined/README.md) is historical and must not be used as the primary findings. The [original project overview](docs/original-project-overview.md) is archived context; current methods and measured counts supersede its assumptions.
+
+The UCI `download` command remains available for the upstream binary CSV, but an already collapsed binary file cannot isolate prediabetes from existing diabetes. Use the three-class upload for this project objective. UCI/Kaggle live requests remain blocked in this cloud machine; this does not block analysis of the uploaded file. Newer raw BRFSS years require separate derivation and codebook validation; NHANES lab-based outcomes are a distinct target and cannot be silently mixed with self-report.
+
+Stages 5–8 remain future work. Later model evaluation must address rare positives, leakage, self-report bias and the difference between identifying current prediabetes and forecasting future onset.

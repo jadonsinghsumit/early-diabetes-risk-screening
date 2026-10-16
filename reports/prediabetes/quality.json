@@ -1,0 +1,152 @@
+{
+  "rows": 218334,
+  "columns": 22,
+  "dtypes": {
+    "Diabetes_binary": "int64",
+    "HighBP": "int64",
+    "HighChol": "int64",
+    "CholCheck": "int64",
+    "BMI": "int64",
+    "Smoker": "int64",
+    "Stroke": "int64",
+    "HeartDiseaseorAttack": "int64",
+    "PhysActivity": "int64",
+    "Fruits": "int64",
+    "Veggies": "int64",
+    "HvyAlcoholConsump": "int64",
+    "AnyHealthcare": "int64",
+    "NoDocbcCost": "int64",
+    "GenHlth": "int64",
+    "MentHlth": "int64",
+    "PhysHlth": "int64",
+    "DiffWalk": "int64",
+    "Sex": "int64",
+    "Age": "int64",
+    "Education": "int64",
+    "Income": "int64"
+  },
+  "missing": {
+    "Diabetes_binary": 0,
+    "HighBP": 0,
+    "HighChol": 0,
+    "CholCheck": 0,
+    "BMI": 0,
+    "Smoker": 0,
+    "Stroke": 0,
+    "HeartDiseaseorAttack": 0,
+    "PhysActivity": 0,
+    "Fruits": 0,
+    "Veggies": 0,
+    "HvyAlcoholConsump": 0,
+    "AnyHealthcare": 0,
+    "NoDocbcCost": 0,
+    "GenHlth": 0,
+    "MentHlth": 0,
+    "PhysHlth": 0,
+    "DiffWalk": 0,
+    "Sex": 0,
+    "Age": 0,
+    "Education": 0,
+    "Income": 0
+  },
+  "duplicate_rows": 23650,
+  "invalid_values": {},
+  "target_counts": {
+    "0": 213703,
+    "1": 4631
+  },
+  "ranges": {
+    "Diabetes_binary": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "HighBP": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "HighChol": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "CholCheck": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "Smoker": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "Stroke": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "HeartDiseaseorAttack": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "PhysActivity": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "Fruits": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "Veggies": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "HvyAlcoholConsump": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "AnyHealthcare": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "NoDocbcCost": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "DiffWalk": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "Sex": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "BMI": {
+      "min": 12.0,
+      "max": 98.0
+    },
+    "GenHlth": {
+      "min": 1.0,
+      "max": 5.0
+    },
+    "MentHlth": {
+      "min": 0.0,
+      "max": 30.0
+    },
+    "PhysHlth": {
+      "min": 0.0,
+      "max": 30.0
+    },
+    "Age": {
+      "min": 1.0,
+      "max": 13.0
+    },
+    "Education": {
+      "min": 1.0,
+      "max": 6.0
+    },
+    "Income": {
+      "min": 1.0,
+      "max": 8.0
+    }
+  },
+  "source": {
+    "filename": "prediabetes_BRFSS2015.csv",
+    "sha256": "33018d988b7abcc627bc03717a0dfb8a2c7685814776a83182e7bbf16e7978e3"
+  }
+}

@@ -15,7 +15,10 @@ from .statistics import hypothesis_table
 
 
 def run_analysis(source, destination, duplicate_policy="keep", expected_rows=EXPECTED_ROWS, synthetic=False, provenance=None):
-    """Use expected_rows only for explicitly labelled synthetic validation."""
+    """Validate full-source size; provenance defines any eligible subcohort.
+
+    Override expected_rows only for explicitly labelled synthetic validation.
+    """
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
     source_metadata = (json.loads(Path(provenance).read_text(encoding="utf-8"))
