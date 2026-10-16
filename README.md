@@ -1,53 +1,64 @@
-# Early Population Diabetes Risk Screening via CDC Survey Indicators
+# Early Diabetes Risk Screening
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code Style: PEP 8](https://img.shields.io/badge/code%20style-PEP%208-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+A reproducible research workflow for the **first four roadmap stages**: ingestion and quality control, conservative cleaning, exploratory analysis, and association tests. Project lead: Sumit Singh Jadaun; teammates: Priyamvadha and Amiya.
 
-## Project Overview
+Use the full `diabetes_binary_health_indicators_BRFSS2015.csv`: **253,680 rows × 22 columns**. Positive labels combine self-reported prediabetes and diabetes. This is a research analysis, not a diagnosis tool. No predictive models, train/test splits, threshold selection, or clinical performance claims are included yet.
 
-This repository contains the end-to-end machine learning pipeline and statistical analysis for **AAI-500 Final Project (Group 3)**. 
+## Install
 
-Undiagnosed diabetes and prediabetes present a major public health challenge, leading to severe long-term cardiovascular and renal complications alongside escalating healthcare expenditures. Leveraging the **CDC Behavioral Risk Factor Surveillance System (BRFSS) 2015 dataset**, this project develops, validates, and evaluates predictive screening models to identify high-risk individuals using self-reported health and lifestyle indicators.
+Python 3.12 is the tested environment. The package supports Python 3.10+; the exact dependency snapshot targets Python 3.12 on Linux.
 
-Our primary objective is to optimize predictive models for **Sensitivity/Recall** and **PR-AUC**, ensuring high-risk individuals are effectively flagged for early preventative clinical evaluation.
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.lock
+python -m pip install --no-deps -e .
+python -m pip check
+```
 
----
+For other supported Python versions, use `python -m pip install -e '.[dev]'` so pip can resolve compatible versions. The existing cloud checkout can be used directly; no separate worktree is needed.
 
-## Key Features & Dataset Specifications
+## Obtain the data
 
-- **Data Source:** CDC BRFSS 2015 (`diabetes_binary_health_indicators_BRFSS2015.csv`)
-- **Dataset Scale:** 253,680 rows × 22 columns (~18.3 MB CSV)
-- **Target Variable:** `Diabetes_binary` (0 = No Diabetes, 1 = Prediabetes/Diabetes)
-- **Class Imbalance:** ~17% positive class prevalence (imbalanced medical screening scenario)
-- **Primary Feature Categories:**
-  - *Clinical Metrics:* `HighBP`, `HighChol`, `BMI`, `Stroke`, `HeartDiseaseorAttack`
-  - *Lifestyle Indicators:* `Smoker`, `PhysActivity`, `Fruits`, `Veggies`, `HvyAlcoholConsump`
-  - *Demographics & Socioeconomic:* `Age`, `Sex`, `Education`, `Income`, `GenHlth`
+```bash
+diabetes-screening download
+```
 
----
+This downloads the public UCI archive over verified HTTPS and selects only the exact binary filename. It refuses to overwrite an existing file. Network access to `archive.ics.uci.edu` is needed. Alternatively, download the source from [Kaggle](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset) and place the full binary CSV under `data/raw/`. Do not use the balanced or three-level file. Raw data is intentionally excluded from Git.
 
-## 🛠️ Technical Pipeline Architecture
+See [source provenance and the survey-year discrepancy](docs/sources.md). Shape checks identify the expected variant but do not authenticate its derivation; review the source and retain the SHA-256 in the run report.
 
-```text
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     TOP LAYER: DATA PREPARATION & EDA                                  │
-├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
-│ [ PHASE 1: INGESTION & QC ]           │ [ PHASE 2: PREPROCESSING ]        │ [ PHASE 3: EDA ]           │
-│ • CDC BRFSS 2015 (253,680 x 22)       │ • Null audit & deduplication      │ • Class balance (~17%)     │
-│ • Schema & data type validation       │ • Ordinal survey scaling          │ • Distribution plots       │
-│ • Memory check (~38 MB CSV)           │ • BMI continuous skewness check   │ • Correlation heatmaps     │
-│ 🛠️ Python 3.10+, Pandas, NumPy        │ 🛠️ Pandas, NumPy, Scikit-Learn    │ 🛠️ Matplotlib, Seaborn     │
-└───────────────────────────────────────┴───────────────────────────────────┴─────────────┬──────────────┘
-                                                                                          │
-                                                                                          ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     BOTTOM LAYER: STATS, ML & EVALUATION                               │
-├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
-│ [ PHASE 4: HYPOTHESIS TESTING ]       │ [ PHASE 5: MODEL TRAINING ]       │ [ PHASE 6: EVALUATION ]    │
-│ • Chi-Square (χ²) categorical tests   │ • Stratified 80/20 train/test     │ • Optimize Recall / PR-AUC │
-│ • Odds Ratios (OR) calculation        │ • Baseline Logistic Regression    │ • Threshold shift (0.35)   │
-│ • Statsmodels inference & p-values    │ • XGBoost & Random Forest         │ • Final matrix validation  │
-│ 🛠️ SciPy, Statsmodels                 │ 🛠️ Scikit-Learn, XGBoost          │ 🛠️ Scikit-Learn Metrics    │
-└───────────────────────────────────────┴───────────────────────────────────┴────────────────────────────┘
+## Run stages 1–4
 
+```bash
+diabetes-screening run \
+  --input data/raw/diabetes_binary_health_indicators_BRFSS2015.csv \
+  --output outputs/baseline
+```
+
+Every run needs a **new output directory**, preventing accidental overwrites or stale success markers. A failure returns a nonzero exit code. The success manifest is written only after all four stages finish. No credentials or background services are required to analyze a local CSV.
+
+| Stage | Outputs | What to verify |
+| --- | --- | --- |
+| 1 | `quality.json`, `data_dictionary.csv` | 253,680 × 22 input, exact columns, dtype/range/label audit, input SHA-256 |
+| 2 | `cleaned.csv`, `cleaning.json` | Default row count preserved, duplicates audited, original codes and class balance retained |
+| 3 | `eda/*.png`, descriptive CSVs, `eda/observations.md` | Actual positive fraction, group summaries, distributions, categorical factors, Pearson/Spearman matrices |
+| 4 | `hypotheses.csv` | 25 planned tests, explicit skips, H0/H1, p-values, BH correction, effects, intervals and limitations |
+| Run | `manifest.json`, output `README.md` | Source hash, dependency versions, analysis mode, actual test/skip counts |
+
+Duplicates are retained because matching profiles may represent different respondents. Missing or invalid values stop cleaning rather than triggering hidden imputation or row deletion. To run a separate duplicate sensitivity analysis, choose another output directory and add `--duplicates drop`. Read [cleaning decisions](docs/cleaning.md), [exploration notes](docs/exploration.md), and [statistical methods](docs/statistics.md) before interpreting results.
+
+Binary predictors receive odds ratios and 95% intervals. Multilevel predictors receive omnibus Cramer's V (CI not estimated, explicitly labelled). Selected numeric/ordinal comparisons receive rank-biserial effects and approximate 95% intervals. Sparse chi-square cells are flagged. Tests are unadjusted for confounding and survey design; BH-adjusted p-values do not make the associations causal.
+
+## Verify the implementation
+
+```bash
+python -m pytest
+python -m build
+```
+
+Tests cover source contracts, invalid and missing values, duplicates, safe archive selection, known odds-ratio calculations, tied ranks, correction and skip behavior, chart/table generation, and the CLI end to end. Pytest enforces **at least 80% source statement coverage** and writes `coverage.xml`. CI repeats tests, dependency checks, and packaging on Python 3.12. Network access and real source data are not needed for the synthetic test suite.
+
+For a small explicitly synthetic CSV with the same columns, `--synthetic-rows N` bypasses the production row count and labels all outputs synthetic. **Never use synthetic results as project findings.** Normal runs require the full source shape.
+
+Current verification and the remaining real-data check are recorded in [validation notes](docs/validation.md). Generated figures, raw/cleaned CSVs, coverage reports, and build outputs stay outside Git. Stages 5–8 remain future work; full-cohort exploration must not later be used to tune a held-out evaluation set.
