@@ -13,6 +13,11 @@ class DataQualityError(ValueError):
     """The source does not meet the declared input contract."""
 
 
+def _finite_bound(values, operation):
+    result = getattr(pd.to_numeric(values, errors="coerce"), operation)()
+    return float(result) if np.isfinite(result) else None
+
+
 def audit(frame):
     """Describe source defects without silently coercing or dropping them."""
     issues = {}
@@ -33,8 +38,8 @@ def audit(frame):
         "invalid_values": issues,
         "target_counts": {str(k): int(v) for k, v in frame[TARGET].value_counts(dropna=False).items()},
         "ranges": {field.name: {
-            "min": float(pd.to_numeric(frame[field.name], errors="coerce").min()),
-            "max": float(pd.to_numeric(frame[field.name], errors="coerce").max()),
+            "min": _finite_bound(frame[field.name], "min"),
+            "max": _finite_bound(frame[field.name], "max"),
         } for field in FIELDS},
     }
 
@@ -47,7 +52,11 @@ def load_source(path, expected_rows=EXPECTED_ROWS):
     if len(frame) != expected_rows:
         raise DataQualityError(f"Expected {expected_rows:,} rows, got {len(frame):,}; check the dataset variant")
     report = audit(frame)
-    report["source"] = {"filename": path.name, "sha256": hashlib.file_digest(path.open("rb"), "sha256").hexdigest()}
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    report["source"] = {"filename": path.name, "sha256": digest.hexdigest()}
     return frame, report
 
 
