@@ -1,6 +1,6 @@
 # Source and research boundaries
 
-For the primary prediabetes endpoint, use the uploaded three-class `diabetes_012_health_indicators_BRFSS2015.csv` (253,680 records, 22 columns) and explicitly exclude existing diabetes. The original roadmap requested the full binary variant, but that collapsed endpoint cannot separate prediabetes from existing diabetes. Do not substitute the balanced sample. The requested combined screening endpoint combines self-reported prediabetes and diabetes; it is not lab-confirmed diabetes and cannot measure future incident disease.
+Use the uploaded three-class `diabetes_012_health_indicators_BRFSS2015.csv` (253,680 records, 22 columns). The primary endpoint is the combined screening target (original labels 1 and 2 positive, 0 negative); the prediabetes-only endpoint (label 2 excluded) is a secondary sensitivity analysis. The roadmap's official binary file cannot be used for the prediabetes-only analysis because it cannot separate prediabetes from existing diabetes. Do not substitute the balanced sample. The combined endpoint is self-reported prediabetes or diabetes; it is not lab-confirmed diabetes and cannot measure future incident disease.
 
 - Kaggle, Alex Teboul: https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset
 - UCI mirror: https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators
@@ -16,6 +16,8 @@ The supplied `diabetes_012_health_indicators_BRFSS2015.csv.zip` contains one thr
 
 Do not infer the upstream binary file's label mapping from its filename or shape. Verify its source codebook before comparing endpoints. The archived overview's approximate 17% prevalence was not a measured result and is superseded by the uploaded-data report.
 
-## Primary endpoint after goal clarification
+## Endpoint decision
 
-The primary analysis now retains original labels 0 and 1, maps them to no-diabetes and prediabetes respectively, and excludes label 2. This yields 218,334 eligible respondents, with 4,631 prediabetes labels (2.12%). The earlier combined run is retained only as historical comparison. The exclusion is made during cohort preparation, recorded in provenance, and checked against the full source counts. It is not silent cleaning or balancing. These are existing self-reported conditions at survey time, not future-onset outcomes.
+The primary analysis uses the combined endpoint from the roadmap (`Diabetes_binary`: no diabetes versus prediabetes or diabetes): 253,680 respondents, 39,977 positives (15.76%). It keeps every respondent. The prediabetes-only analysis retains original labels 0 and 1, maps them to no diabetes and prediabetes, and excludes label 2: 218,334 respondents, 4,631 positives (2.12%). Both are existing self-reported conditions at survey time, not future-onset outcomes, and the exclusion in the secondary analysis is recorded in provenance and checked against the full source counts.
+
+The roadmap's "about 14%" prevalence equals class 2 alone (13.93%), and the official binary file's 218,334 negatives equal classes 0 and 1 together. Verify the official file's positive count (35,346 would mean prediabetes is counted as negative there) before comparing results with it or citing its label definition.

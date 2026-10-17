@@ -25,6 +25,8 @@ def test_four_stages_end_to_end(sample, tmp_path):
     pd.testing.assert_frame_equal(cleaned, sample)
     hypotheses = pd.read_csv(output / "hypotheses.csv")
     assert len(hypotheses) == 25 and hypotheses.p_adjusted_bh.notna().all()
+    assert hypotheses.loc[hypotheses.test == "mann_whitney_u", "odds_ratio_per_unit"].notna().all()
+    assert "review_flags" in json.loads((output / "cleaning.json").read_text())
     assert len(pd.read_csv(output / "data_dictionary.csv")) == 22
     assert "25.00%" in (output / "eda" / "observations.md").read_text()
     with pytest.raises(FileExistsError):

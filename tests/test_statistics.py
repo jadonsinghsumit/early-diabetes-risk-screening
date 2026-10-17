@@ -4,7 +4,7 @@ import pytest
 from scipy.stats import mannwhitneyu
 from diabetes_screening.schema import TARGET
 from diabetes_screening.statistics import (categorical_test, distribution_test, hypothesis_table,
-                                            odds_ratio, rank_effect)
+                                            logistic_odds_ratio, odds_ratio, rank_effect)
 
 
 def test_odds_ratio_direction_and_known_interval():
@@ -60,3 +60,31 @@ def test_all_tests_skipped_is_an_explicit_outcome(sample):
     table = hypothesis_table(sample)
     assert table["status"].eq("skipped").all()
     assert table["p_adjusted_bh"].isna().all()
+
+
+def test_per_unit_odds_ratio_matches_two_by_two_table_for_binary_predictor(sample):
+    table = pd.crosstab(sample["HighBP"], sample[TARGET]).reindex(columns=[0, 1], fill_value=0)
+    expected, lower, upper, _ = odds_ratio(table)
+    estimate, low, high, note = logistic_odds_ratio(sample, "HighBP")
+    assert note == ""
+    assert (estimate, low, high) == pytest.approx((expected, lower, upper), rel=1e-4)
+
+
+def test_per_unit_odds_ratio_direction_and_failure_modes(sample):
+    shifted = sample.copy()
+    shifted["BMI"] = 20 + 3 * shifted[TARGET] + np.random.default_rng(5).integers(0, 8, 160)   # overlapping, higher when positive
+    estimate, lower, upper, _ = logistic_odds_ratio(shifted, "BMI")
+    assert 1 < lower < estimate < upper
+    shifted["BMI"] = 30
+    estimate, lower, upper, note = logistic_odds_ratio(shifted, "BMI")
+    assert np.isnan([estimate, lower, upper]).all() and "not reported" in note
+    separated = pd.DataFrame({TARGET: [0, 0, 0, 1, 1, 1], "BMI": [1, 2, 3, 10, 11, 12]})
+    estimate, _, _, note = logistic_odds_ratio(separated, "BMI")
+    assert np.isnan(estimate) and "did not converge" in note
+
+
+def test_numeric_and_ordinal_rows_carry_per_unit_odds_ratios(sample):
+    table = hypothesis_table(sample)
+    numeric_rows = table["test"].eq("mann_whitney_u")
+    assert table.loc[numeric_rows, "odds_ratio_per_unit"].notna().all()
+    assert table.loc[~numeric_rows, "odds_ratio_per_unit"].isna().all()

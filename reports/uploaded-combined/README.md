@@ -1,4 +1,4 @@
-> Historical combined-endpoint run. The primary objective is now prediabetes among adults without existing diabetes; use [the prediabetes report](../prediabetes/README.md).
+> **Primary report.** Combined endpoint (no diabetes versus prediabetes or diabetes), matching the roadmap's `Diabetes_binary` target. The prediabetes-only run is the [secondary sensitivity analysis](../prediabetes/README.md).
 
 # Analysis run
 
