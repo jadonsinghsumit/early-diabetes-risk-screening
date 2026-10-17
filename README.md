@@ -83,4 +83,4 @@ The UCI `download` command remains available for the upstream binary CSV, but an
 
 > **Regenerate the checked-in reports after pulling.** `reports/uploaded-combined/` and `reports/prediabetes/` were produced by the earlier code. The plots, `observations.md`, `hypotheses.csv` (new per-unit odds-ratio columns) and `cleaning.json` (new `review_flags`) change with the latest code, so rerun the commands above on fresh output directories and replace the reports with the new aggregate files. The numbers already in the reports do not change.
 
-Stages 5–8 remain future work. Later model evaluation must address class imbalance (15.76% positives), leakage through identical profiles, self-report and healthcare-access bias, and the difference between identifying current diabetes or prediabetes and forecasting future onset.
+Stages 5–8 remain future work; see the [stages 5–8 plan](docs/stages-5-8-plan.md). Later model evaluation must address class imbalance (15.76% positives), leakage through identical profiles, self-report and healthcare-access bias, and the difference between identifying current diabetes or prediabetes and forecasting future onset.
