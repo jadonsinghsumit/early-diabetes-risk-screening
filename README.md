@@ -1,53 +1,80 @@
-# Early Population Diabetes Risk Screening via CDC Survey Indicators
+# Prediabetes Risk Screening
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code Style: PEP 8](https://img.shields.io/badge/code%20style-PEP%208-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+This project focuses on identifying **self-reported prediabetes among adults without existing diabetes**, using health and lifestyle indicators from the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests. 
+Project lead: Sumit Singh Jadaun
+Teammates: Priyamvadha and Amiya.
 
-## Project Overview
+The uploaded `Diabetes_012` table has 253,680 rows. The primary endpoint is explicit:
 
-This repository contains the end-to-end machine learning pipeline and statistical analysis for **AAI-500 Final Project (Group 3)**. 
+| Original label | Meaning | Analysis decision |
+| --- | --- | --- |
+| 0 | No diabetes | Retain as negative: 213,703 respondents |
+| 1 | Prediabetes | Retain as positive: 4,631 respondents |
+| 2 | Existing diabetes | Exclude: 35,346 respondents |
 
-Undiagnosed diabetes and prediabetes present a major public health challenge, leading to severe long-term cardiovascular and renal complications alongside escalating healthcare expenditures. Leveraging the **CDC Behavioral Risk Factor Surveillance System (BRFSS) 2015 dataset**, this project develops, validates, and evaluates predictive screening models to identify high-risk individuals using self-reported health and lifestyle indicators.
+The resulting cohort has **218,334 respondents**, with **2.12% positive labels**. Existing diabetes is not treated as a healthy negative or merged into the positive group. Survey labels are self-reported; this cross-sectional dataset does not establish who will develop diabetes later. A future-onset prediction claim needs longitudinal outcomes. This is a research prototype, not a diagnostic tool, and no predictive model has been trained in stages 1–4.
 
-Our primary objective is to optimize predictive models for **Sensitivity/Recall** and **PR-AUC**, ensuring high-risk individuals are effectively flagged for early preventative clinical evaluation.
+## Install
 
----
+Python 3.12+. The package supports Python 3.12+; the exact dependency snapshot targets Python 3.12 on Linux.
 
-## Key Features & Dataset Specifications
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.lock
+python -m pip install --no-deps -e .
+python -m pip check
+```
 
-- **Data Source:** CDC BRFSS 2015 (`diabetes_binary_health_indicators_BRFSS2015.csv`)
-- **Dataset Scale:** 253,680 rows × 22 columns (~18.3 MB CSV)
-- **Target Variable:** `Diabetes_binary` (0 = No Diabetes, 1 = Prediabetes/Diabetes)
-- **Class Imbalance:** ~17% positive class prevalence (imbalanced medical screening scenario)
-- **Primary Feature Categories:**
-  - *Clinical Metrics:* `HighBP`, `HighChol`, `BMI`, `Stroke`, `HeartDiseaseorAttack`
-  - *Lifestyle Indicators:* `Smoker`, `PhysActivity`, `Fruits`, `Veggies`, `HvyAlcoholConsump`
-  - *Demographics & Socioeconomic:* `Age`, `Sex`, `Education`, `Income`, `GenHlth`
+For other supported Python versions, use `python -m pip install -e '.[dev]'` to resolve compatible dependencies. Use the existing cloud checkout directly; a separate worktree is unnecessary.
 
----
+## Prepare the primary cohort and run stages 1–4
 
-## 🛠️ Technical Pipeline Architecture
+Place the supplied three-class ZIP under `data/raw/`, then run:
 
-```text
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     TOP LAYER: DATA PREPARATION & EDA                                  │
-├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
-│ [ PHASE 1: INGESTION & QC ]           │ [ PHASE 2: PREPROCESSING ]        │ [ PHASE 3: EDA ]           │
-│ • CDC BRFSS 2015 (253,680 x 22)       │ • Null audit & deduplication      │ • Class balance (~17%)     │
-│ • Schema & data type validation       │ • Ordinal survey scaling          │ • Distribution plots       │
-│ • Memory check (~38 MB CSV)           │ • BMI continuous skewness check   │ • Correlation heatmaps     │
-│ 🛠️ Python 3.10+, Pandas, NumPy        │ 🛠️ Pandas, NumPy, Scikit-Learn    │ 🛠️ Matplotlib, Seaborn     │
-└───────────────────────────────────────┴───────────────────────────────────┴─────────────┬──────────────┘
-                                                                                          │
-                                                                                          ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     BOTTOM LAYER: STATS, ML & EVALUATION                               │
-├───────────────────────────────────────┬───────────────────────────────────┬────────────────────────────┤
-│ [ PHASE 4: HYPOTHESIS TESTING ]       │ [ PHASE 5: MODEL TRAINING ]       │ [ PHASE 6: EVALUATION ]    │
-│ • Chi-Square (χ²) categorical tests   │ • Stratified 80/20 train/test     │ • Optimize Recall / PR-AUC │
-│ • Odds Ratios (OR) calculation        │ • Baseline Logistic Regression    │ • Threshold shift (0.35)   │
-│ • Statsmodels inference & p-values    │ • XGBoost & Random Forest         │ • Final matrix validation  │
-│ 🛠️ SciPy, Statsmodels                 │ 🛠️ Scikit-Learn, XGBoost          │ 🛠️ Scikit-Learn Metrics    │
-└───────────────────────────────────────┴───────────────────────────────────┴────────────────────────────┘
+```bash
+diabetes-screening prepare \
+  --input data/raw/diabetes_012_health_indicators_BRFSS2015.csv.zip \
+  --output data/derived/prediabetes_BRFSS2015.csv \
+  --endpoint prediabetes
 
+diabetes-screening run \
+  --input data/derived/prediabetes_BRFSS2015.csv \
+  --provenance data/derived/prediabetes_BRFSS2015.provenance.json \
+  --output outputs/prediabetes
+```
+
+Choose **new paths** when repeating preparation or analysis; existing outputs are never overwritten. The source must contain all 253,680 rows and the exact three-class schema. The provenance records source/archive-member hashes, source counts, exclusions, mapping and the derived input hash. Analysis verifies the derived hash, mapping, cohort size and label counts. It accepts the smaller cohort through this provenance, without using a synthetic row-count bypass. The legacy internal column name `Diabetes_binary` stores the prepared 0/1 outcome; the report's endpoint and dictionary define its meaning.
+
+Raw and cleaned row-level files stay ignored locally. The [checked-in primary report](reports/prediabetes/README.md) contains aggregate data, charts, provenance and methods. No credentials or background services are required for a local run. A fresh Git clone needs the uploaded source file; Git contains only aggregate reports.
+
+## Review the outputs
+
+| Stage | Outputs | Verification |
+| --- | --- | --- |
+| 1 | `quality.json`, `data_dictionary.csv`, `source_provenance.json` | Full source 253,680 → eligible cohort 218,334; source hashes, labels and feature audit |
+| 2 | `cleaned.csv`, `cleaning.json` | Eligible rows retained; duplicates audited; no hidden imputation, scaling, clipping or balancing |
+| 3 | `eda/*.png`, summary CSVs, `eda/observations.md` | Observed 2.12% positive fraction, distributions and groups, categorical factors, Pearson/Spearman matrices |
+| 4 | `hypotheses.csv` | 25 planned tests; H0/H1, status, raw/BH p-values, effects, intervals and sparse-cell notes |
+| Run | `manifest.json`, run `README.md` | Endpoint is `prediabetes`; cohort/source counts, dependency versions and execution/skip counts |
+
+The success manifest is written after all four stages finish. Errors return a nonzero exit status. Missing or invalid included values stop cleaning; no automatic row deletion or imputation occurs. Identical profiles are retained because no respondent identifier establishes accidental duplication. `--duplicates drop` provides a separate sensitivity run and must use a fresh output directory.
+
+Read the [sources](docs/sources.md), [cleaning decisions](docs/cleaning.md), [exploration notes](docs/exploration.md), and [statistical methods](docs/statistics.md). Tests are exploratory, unadjusted for confounding and unavailable survey design; associations do not establish causation or clinical performance. Odds ratios concern this prediabetes endpoint. Mann–Whitney effects have approximate placement intervals; multilevel Cramer's V has no estimated CI and is labelled accordingly. Tiny p-values can underflow to zero.
+
+## Verify the code
+
+```bash
+python -m pytest
+python -m build
+```
+
+**34 tests passed with 98.11% source statement coverage** in the current validation. Pytest enforces at least 80% and writes `coverage.xml`. Unit and integration tests include explicit exclusion of existing diabetes, retention of controls and prediabetes cases, provenance checks, known statistical calculations, missing/invalid data, chart generation and CLI behavior. CI repeats checks on Python 3.12; a remote CI result is not claimed here. See [validation details](docs/validation.md).
+
+## Other endpoints and data sources
+
+`prepare --endpoint combined` and `--endpoint diabetes-only` remain explicit alternatives for comparison, not the primary objective. The [earlier combined-endpoint report](reports/uploaded-combined/README.md) is historical and must not be used as the primary findings. The [original project overview](docs/original-project-overview.md) is archived context; current methods and measured counts supersede its assumptions.
+
+The UCI `download` command remains available for the upstream binary CSV, but an already collapsed binary file cannot isolate prediabetes from existing diabetes. Use the three-class upload for this project objective. UCI/Kaggle live requests remain blocked in this cloud machine; this does not block analysis of the uploaded file. Newer raw BRFSS years require separate derivation and codebook validation; NHANES lab-based outcomes are a distinct target and cannot be silently mixed with self-report.
+
+Stages 5–8 remain future work. Later model evaluation must address rare positives, leakage, self-report bias and the difference between identifying current prediabetes and forecasting future onset.

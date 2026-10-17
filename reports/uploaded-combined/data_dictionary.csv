@@ -1,0 +1,23 @@
+name,kind,minimum,maximum,description
+Diabetes_binary,binary,0,1,0: no diabetes; 1: self-reported prediabetes or diabetes
+HighBP,binary,0,1,"Ever told blood pressure was high; 0 no, 1 yes"
+HighChol,binary,0,1,"Ever told cholesterol was high; 0 no, 1 yes"
+CholCheck,binary,0,1,"Cholesterol checked in the past five years; 0 no, 1 yes"
+BMI,numeric,12,98,Body mass index in kg/m²; source-derived observed bounds
+Smoker,binary,0,1,"Smoked at least 100 cigarettes in lifetime; 0 no, 1 yes"
+Stroke,binary,0,1,"Ever told of a stroke; 0 no, 1 yes"
+HeartDiseaseorAttack,binary,0,1,"Coronary heart disease or myocardial infarction; 0 no, 1 yes"
+PhysActivity,binary,0,1,"Physical activity in past 30 days, excluding job; 0 no, 1 yes"
+Fruits,binary,0,1,"Consumes fruit at least once daily; 0 no, 1 yes"
+Veggies,binary,0,1,"Consumes vegetables at least once daily; 0 no, 1 yes"
+HvyAlcoholConsump,binary,0,1,"Heavy drinking under source sex-specific thresholds; 0 no, 1 yes"
+AnyHealthcare,binary,0,1,"Has healthcare coverage; 0 no, 1 yes"
+NoDocbcCost,binary,0,1,"Could not see a doctor because of cost in past year; 0 no, 1 yes"
+GenHlth,ordinal,1,5,"General health: 1 excellent, 2 very good, 3 good, 4 fair, 5 poor"
+MentHlth,numeric,0,30,Days of poor mental health in past 30 days
+PhysHlth,numeric,0,30,Days of poor physical health in past 30 days
+DiffWalk,binary,0,1,"Serious difficulty walking or climbing stairs; 0 no, 1 yes"
+Sex,binary,0,1,Source coding: 0 female; 1 male
+Age,ordinal,1,13,"Age bands: 1=18–24, 2=25–29, 3=30–34, 4=35–39, 5=40–44, 6=45–49, 7=50–54, 8=55–59, 9=60–64, 10=65–69, 11=70–74, 12=75–79, 13=80+"
+Education,ordinal,1,6,"Education: 1 never attended/kindergarten, 2 grades 1–8, 3 grades 9–11, 4 high school/GED, 5 college 1–3 years, 6 college 4+ years"
+Income,ordinal,1,8,"Household income: 1 <$10k, 2 $10k–<15k, 3 $15k–<20k, 4 $20k–<25k, 5 $25k–<35k, 6 $35k–<50k, 7 $50k–<75k, 8 ≥$75k"
