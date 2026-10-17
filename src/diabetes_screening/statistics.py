@@ -1,6 +1,9 @@
 """Unadjusted association tests; no fitted predictive models or causal claims."""
+import warnings
+
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
 from scipy import stats
 from statsmodels.stats.contingency_tables import Table2x2
 from statsmodels.stats.multitest import multipletests
@@ -39,12 +42,35 @@ def rank_effect(positive, negative):
     return float(effect), float(max(-1, effect - margin)), float(min(1, effect + margin))
 
 
+def logistic_odds_ratio(frame, feature):
+    """Unadjusted odds ratio per one-unit increase from a one-predictor logistic regression.
+
+    Returns (estimate, lower, upper, note). Failures (constant predictor, separation,
+    non-convergence) return NaNs and an explanation instead of raising.
+    """
+    design = sm.add_constant(frame[feature].astype(float), has_constant="add")
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            result = sm.Logit(frame[TARGET].astype(float), design).fit(disp=0)
+        if not result.mle_retvals.get("converged", True):
+            return np.nan, np.nan, np.nan, "Per-unit odds ratio not reported: logistic fit did not converge"
+        lower, upper = result.conf_int().loc[feature]
+        estimate = float(np.exp(result.params[feature]))
+        if not np.isfinite([estimate, lower, upper]).all():
+            return np.nan, np.nan, np.nan, "Per-unit odds ratio not reported: non-finite estimate"
+        return estimate, float(np.exp(lower)), float(np.exp(upper)), ""
+    except Exception as error:  # singular design or perfect separation
+        return np.nan, np.nan, np.nan, f"Per-unit odds ratio not reported: {type(error).__name__}"
+
+
 def _base(feature, test, null, alternative):
     return {"feature": feature, "test": test, "H0": null, "H1": alternative,
             "status": "tested", "p_value": np.nan, "statistic": np.nan,
             "effect_name": "", "effect_size": np.nan, "ci_lower": np.nan, "ci_upper": np.nan,
             "ci_method": "", "cramers_v": np.nan, "minimum_expected_count": np.nan,
-            "zero_cell_correction": False, "notes": ""}
+            "zero_cell_correction": False, "notes": "",
+            "odds_ratio_per_unit": np.nan, "or_unit_ci_lower": np.nan, "or_unit_ci_upper": np.nan}
 
 
 def categorical_test(frame, feature):
@@ -55,7 +81,7 @@ def categorical_test(frame, feature):
         row.update(status="skipped", notes="Requires variation in predictor and both target groups")
         return row
     statistic, p_value, _, expected = stats.chi2_contingency(table, correction=False)
-    cramers_v = np.sqrt(statistic / (table.to_numpy().sum() * min(table.shape[0] - 1, 1)))
+    cramers_v = np.sqrt(statistic / (table.to_numpy().sum() * (min(table.shape) - 1)))
     row.update(statistic=float(statistic), p_value=float(p_value), cramers_v=float(cramers_v),
                effect_name="Cramer's V", effect_size=float(cramers_v),
                minimum_expected_count=float(expected.min()),
@@ -86,6 +112,10 @@ def distribution_test(frame, feature):
                effect_name="rank-biserial correlation (positive higher)", effect_size=effect,
                ci_lower=lower, ci_upper=upper, ci_method="95% normal placement interval, clipped to [-1, 1]",
                notes="Tie-corrected asymptotic U test; distribution test, not solely a test of medians")
+    estimate, lower, upper, note = logistic_odds_ratio(frame, feature)
+    row.update(odds_ratio_per_unit=estimate, or_unit_ci_lower=lower, or_unit_ci_upper=upper)
+    row["notes"] += ("; odds ratio per one-unit increase (unadjusted logistic, 95% Wald CI) in odds_ratio_per_unit" if note == ""
+                     else f"; {note}")
     return row
 
 
