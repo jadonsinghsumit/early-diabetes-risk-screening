@@ -1,7 +1,8 @@
 # Early Diabetes Risk Screening
 
-This project asks whether self-reported health and lifestyle indicators can identify adults with **diabetes or prediabetes** (the roadmap's `Diabetes_binary` target), using the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests.
-Project lead: Sumit Singh Jadaun
+This project asks whether self-reported health and lifestyle indicators can identify adults with **diabetes or prediabetes** (the roadmap's `Diabetes_binary` target), using the supplied BRFSS2015-derived survey table. It currently implements roadmap stages **1–4**: ingestion/QC, cleaning, exploration, and hypothesis tests.    
+
+Project lead: Sumit Singh Jadaun   
 Teammates: Priyamvadha and Amiya.
 
 The uploaded `Diabetes_012` table has 253,680 rows. The **primary endpoint** is explicit:
