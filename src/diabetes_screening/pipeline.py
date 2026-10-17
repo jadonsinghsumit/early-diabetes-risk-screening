@@ -44,14 +44,13 @@ def run_analysis(source, destination, duplicate_policy="keep", expected_rows=EXP
             raise ValueError("Input class counts do not match endpoint provenance")
         write_json(destination / "source_provenance.json", source_metadata)
     write_json(destination / "quality.json", quality)
-    pd.DataFrame(data_dictionary()).to_csv(destination / "data_dictionary.csv", index=False)
-    cleaned, decisions = clean_data(frame, duplicate_policy)
-    cleaned.to_csv(destination / "cleaned.csv", index=False)
-    write_json(destination / "cleaning.json", decisions)
     endpoint = source_metadata["endpoint"] if source_metadata else "combined"
     dictionary = pd.DataFrame(data_dictionary())
     dictionary.loc[dictionary["name"] == "Diabetes_binary", "description"] = DESCRIPTIONS[endpoint]
     dictionary.to_csv(destination / "data_dictionary.csv", index=False)
+    cleaned, decisions = clean_data(frame, duplicate_policy)
+    cleaned.to_csv(destination / "cleaned.csv", index=False)
+    write_json(destination / "cleaning.json", decisions)
     explore(cleaned, destination / "eda", endpoint=endpoint)
     hypotheses = hypothesis_table(cleaned)
     hypotheses.to_csv(destination / "hypotheses.csv", index=False)
