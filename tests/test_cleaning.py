@@ -32,3 +32,17 @@ def test_missingness_and_policy_require_explicit_decisions(sample):
         clean_data(sample, "guess")
     with pytest.raises(DataQualityError, match="empty"):
         clean_data(sample.iloc[:0])
+
+
+def test_review_flags_count_unusual_but_valid_responses_without_changing_data(sample):
+    sample["HighChol"], sample["CholCheck"] = 0, 1          # remove the random baseline first
+    sample.loc[:2, ["HighChol", "CholCheck"]] = [[1, 0], [1, 0], [0, 0]]
+    sample.loc[:1, "BMI"] = [14, 62]
+    sample.loc[0, "PhysHlth"] = 30
+    before = sample.copy()
+    cleaned, report = clean_data(sample)
+    flags = report["review_flags"]
+    assert flags["HighChol=1 but CholCheck=0 (told cholesterol high without a check in five years)"] == 2
+    assert flags["BMI below 15"] >= 1 and flags["BMI 60 or above"] >= 1
+    assert flags["PhysHlth == 30 (heaping at the top code)"] >= 1
+    pd.testing.assert_frame_equal(cleaned, before.astype("int16"))
