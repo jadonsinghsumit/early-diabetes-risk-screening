@@ -1,0 +1,12 @@
+{
+  "rows": 253680,
+  "distinct_profiles": 227908,
+  "profiles_seen_more_than_once": 12228,
+  "rows_in_repeated_profiles": 38000,
+  "share_of_rows_in_repeated_profiles": 0.14979501734468623,
+  "repeated_profiles_with_both_outcomes": 1804,
+  "rows_in_profiles_with_both_outcomes": 6057,
+  "largest_profile_size": 59,
+  "positive_rate_in_repeated_profiles": 0.059921052631578944,
+  "positive_rate_in_unique_profiles": 0.1747959940652819
+}

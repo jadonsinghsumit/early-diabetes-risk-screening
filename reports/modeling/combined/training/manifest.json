@@ -1,0 +1,73 @@
+{
+  "stage": 6,
+  "endpoint": "combined",
+  "input_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
+  "split_sha256": "e8a579495ac84c636afd9aadee7b2e1d5273368b83e797089f1be6c6b805db7c",
+  "seed": 42,
+  "training_rows_used": 202944,
+  "test_rows_used": 0,
+  "models": [
+    "logistic_regression",
+    "random_forest",
+    "xgboost"
+  ],
+  "search_spaces": {
+    "logistic_regression": {
+      "preprocess__kind": "['linear', 'linear-onehot']",
+      "model__C": "<scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fdb46a1c1a0>"
+    },
+    "random_forest": {
+      "model__n_estimators": "[200, 300]",
+      "model__max_depth": "[None, 12, 20]",
+      "model__min_samples_leaf": "[10, 20, 50, 100]",
+      "model__max_features": "['sqrt', 0.33]"
+    },
+    "xgboost": {
+      "model__n_estimators": "[200, 400, 600, 800]",
+      "model__learning_rate": "<scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fdb46977110>",
+      "model__max_depth": "[3, 4, 5, 6]",
+      "model__min_child_weight": "[1, 5, 10, 25]",
+      "model__subsample": "<scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fdb46977250>",
+      "model__colsample_bytree": "<scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fdb46a10b00>",
+      "model__reg_lambda": "<scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fdb46a10c30>"
+    }
+  },
+  "candidates_per_model": {
+    "logistic_regression": 12,
+    "random_forest": 8,
+    "xgboost": 16
+  },
+  "screening_recall_target": 0.8,
+  "class_weighting": "none (stage 5 decision)",
+  "timing_seconds": [
+    {
+      "model": "logistic_regression",
+      "seconds": 100.8
+    },
+    {
+      "model": "random_forest",
+      "seconds": 801.2
+    },
+    {
+      "model": "xgboost",
+      "seconds": 353.8
+    }
+  ],
+  "statsmodels_fit": {
+    "rows": 202944,
+    "positives": 31982,
+    "pseudo_r2_mcfadden": 0.2058696426613852,
+    "converged": true,
+    "features": 21
+  },
+  "python": "3.13.16",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "statsmodels": "0.15.0"
+  }
+}

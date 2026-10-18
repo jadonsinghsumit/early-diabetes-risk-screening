@@ -1,0 +1,10 @@
+{
+  "chosen": "xgboost",
+  "best_mean_pr_auc": "xgboost",
+  "tied_within_noise": [
+    "random_forest",
+    "xgboost"
+  ],
+  "reason": "highest mean validation PR-AUC (0.0599) and the lowest Brier score among the models it can't be told apart from (Random forest)",
+  "rule": "1) Start from the model with the best mean validation PR-AUC. 2) If logistic regression is not significantly worse than it, take logistic regression, because it is the easiest to explain. 3) Otherwise, among the models that are not significantly worse than the best one, take the one with the lowest mean Brier score, because stage 7 reads its probabilities as risks. 'Significantly worse' means p < 0.05 in Nadeau and Bengio's corrected resampled t-test on the five fold-by-fold PR-AUC differences."
+}

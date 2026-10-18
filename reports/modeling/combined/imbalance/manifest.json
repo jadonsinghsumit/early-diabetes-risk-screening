@@ -1,0 +1,43 @@
+{
+  "stage": 5,
+  "endpoint": "combined",
+  "input_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
+  "split_sha256": "e8a579495ac84c636afd9aadee7b2e1d5273368b83e797089f1be6c6b805db7c",
+  "split_strategy": "stratified",
+  "seed": 42,
+  "training_rows_used": 202944,
+  "test_rows_used": 0,
+  "models": [
+    "logistic_regression",
+    "random_forest",
+    "xgboost"
+  ],
+  "model_settings_weighted_variant": {
+    "logistic_regression": {
+      "preprocess": "ScreeningPreprocessor()",
+      "model": "LogisticRegression(class_weight='balanced', max_iter=5000)"
+    },
+    "random_forest": {
+      "preprocess": "ScreeningPreprocessor(kind='tree')",
+      "model": "RandomForestClassifier(class_weight='balanced', min_samples_leaf=20,\n                       n_estimators=200, n_jobs=-1, random_state=42)"
+    },
+    "xgboost": {
+      "preprocess": "ScreeningPreprocessor(kind='tree')",
+      "model": "XGBClassifier(base_score=None, booster=None, callbacks=None,\n              colsample_bylevel=None, colsample_bynode=None,\n              colsample_bytree=None, device=None, early_stopping_rounds=None,\n              enable_categorical=True, eval_metric='logloss',\n              feature_types=None, feature_weights=None, gamma=None,\n              grow_policy=None, importance_type=None,\n              interaction_constraints=None, learning_rate=0.1, max_bin=None,\n              max_cat_threshold=None, max_cat_to_onehot=None,\n              max_delta_step=None, max_depth=4, max_leaves=None,\n              min_child_weight=None, missing=nan, monotone_constraints=None,\n              multi_strategy=None, n_estimators=300, n_jobs=-1,\n              num_parallel_tree=None, ...)"
+    }
+  },
+  "weighting": {
+    "logistic_regression": "class_weight='balanced'",
+    "random_forest": "class_weight='balanced'",
+    "xgboost": "scale_pos_weight = negatives/positives of each training fold"
+  },
+  "python": "3.13.16",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2"
+  }
+}

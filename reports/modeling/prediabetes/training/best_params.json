@@ -1,0 +1,36 @@
+{
+  "logistic_regression": {
+    "params": {
+      "model__C": 0.04662,
+      "preprocess__kind": "linear-onehot"
+    },
+    "search_pr_auc_mean": 0.054996433383448874,
+    "refit_check_pr_auc_mean": 0.054996433383448874,
+    "candidates_tried": 12
+  },
+  "random_forest": {
+    "params": {
+      "model__n_estimators": 300,
+      "model__min_samples_leaf": 50,
+      "model__max_features": "sqrt",
+      "model__max_depth": 20
+    },
+    "search_pr_auc_mean": 0.05833295127414093,
+    "refit_check_pr_auc_mean": 0.05833295127414093,
+    "candidates_tried": 8
+  },
+  "xgboost": {
+    "params": {
+      "model__colsample_bytree": 0.84466,
+      "model__learning_rate": 0.02033,
+      "model__max_depth": 3,
+      "model__min_child_weight": 1,
+      "model__n_estimators": 600,
+      "model__reg_lambda": 4.77744,
+      "model__subsample": 0.74185
+    },
+    "search_pr_auc_mean": 0.05988928450255695,
+    "refit_check_pr_auc_mean": 0.05988928450255695,
+    "candidates_tried": 16
+  }
+}
