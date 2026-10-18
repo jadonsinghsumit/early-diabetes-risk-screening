@@ -1,0 +1,7 @@
+model,weighting,seconds_all_folds
+logistic_regression,unweighted,3.9
+logistic_regression,weighted,3.9
+random_forest,unweighted,49.5
+random_forest,weighted,57.3
+xgboost,unweighted,8.8
+xgboost,weighted,7.8

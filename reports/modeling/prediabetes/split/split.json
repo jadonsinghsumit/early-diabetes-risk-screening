@@ -1,0 +1,61 @@
+{
+  "endpoint": "prediabetes",
+  "input_sha256": "33018d988b7abcc627bc03717a0dfb8a2c7685814776a83182e7bbf16e7978e3",
+  "strategy": "stratified",
+  "seed": 42,
+  "test_size": 0.2,
+  "n_splits": 5,
+  "assignment_file": "split_assignment.csv.gz",
+  "assignment_sha256": "7632682314c1f0cbbc9c533f96846ab634ea2e15661ff69d79f1f11fd9aefbc4",
+  "fold_codes": {
+    "-1": "locked test set",
+    "0..k-1": "cross-validation fold of a training row"
+  },
+  "rows": 218334,
+  "train": {
+    "rows": 174667,
+    "positives": 3705,
+    "prevalence": 0.021211791580550417
+  },
+  "test": {
+    "rows": 43667,
+    "positives": 926,
+    "prevalence": 0.021205944992786316
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "rows": 34934,
+      "positives": 741,
+      "prevalence": 0.021211427262838495
+    },
+    {
+      "fold": 1,
+      "rows": 34934,
+      "positives": 741,
+      "prevalence": 0.021211427262838495
+    },
+    {
+      "fold": 2,
+      "rows": 34933,
+      "positives": 741,
+      "prevalence": 0.02121203446597773
+    },
+    {
+      "fold": 3,
+      "rows": 34933,
+      "positives": 741,
+      "prevalence": 0.02121203446597773
+    },
+    {
+      "fold": 4,
+      "rows": 34933,
+      "positives": 741,
+      "prevalence": 0.02121203446597773
+    }
+  ],
+  "test_rows_sharing_a_profile_with_training": 6432,
+  "share_of_test_rows_sharing_a_profile": 0.14729658552224792,
+  "scikit_learn": "1.9.1",
+  "test_set_policy": "Read the test rows only through locked_test_data(), after threshold.json records this assignment_sha256 (roadmap stage 7)."
+}

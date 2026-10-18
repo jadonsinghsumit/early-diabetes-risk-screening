@@ -5,6 +5,8 @@ This project asks whether self-reported health and lifestyle indicators can iden
 Project lead: Sumit Singh Jadaun   
 Teammates: Priyamvadha and Amiya.
 
+> **Update: stages 5 and 6 are now done.** They were added in new files only (`src/diabetes_screening/modeling/`, two new test files, `docs/splitting.md`, `docs/training.md`, `docs/modeling-validation.md` and `reports/modeling/`) and have their own command, `diabetes-screening-model`. The stage 1–4 code, reports and documentation, including the rest of this README, are unchanged. So where the text below says stages 5–8 are future work, read that as stages 7–8. See [Stages 5 and 6: modeling](#stages-5-and-6-modeling) at the end.
+
 The uploaded `Diabetes_012` table has 253,680 rows. The **primary endpoint** is explicit:
 
 | Original label | Meaning | Analysis decision |
@@ -85,3 +87,91 @@ The UCI `download` command remains available for the upstream binary CSV, but an
 > **Regenerate the checked-in reports after pulling.** `reports/uploaded-combined/` and `reports/prediabetes/` were produced by the earlier code. The plots, `observations.md`, `hypotheses.csv` (new per-unit odds-ratio columns) and `cleaning.json` (new `review_flags`) change with the latest code, so rerun the commands above on fresh output directories and replace the reports with the new aggregate files. The numbers already in the reports do not change.
 
 Stages 5–8 remain future work; see the [stages 5–8 plan](docs/stages-5-8-plan.md). Later model evaluation must address class imbalance (15.76% positives), leakage through identical profiles, self-report and healthcare-access bias, and the difference between identifying current diabetes or prediabetes and forecasting future onset.
+
+## Stages 5 and 6: modeling
+
+*This section was added for stages 5 and 6. Everything above it is unchanged from stages 1–4.*
+
+Stage 5 splits the data and settles how to handle the class imbalance. Stage 6 tunes and compares three models, checks them against a paper risk checklist that clinics use, and looks at which answers drive them. The full write-ups are [splitting](docs/splitting.md) and [training](docs/training.md); the checks we ran are in [modeling validation](docs/modeling-validation.md).
+
+### Setup
+
+The install steps above still work. `requirements.lock` and `pyproject.toml` now also list scikit-learn and XGBoost, so in an existing environment run `python -m pip install -r requirements.lock` and `python -m pip install --no-deps -e .` again. On Linux, XGBoost's wheel also pulls in NVIDIA's NCCL library, which is a large download and isn't used on CPU-only machines.
+
+For the data, the Kaggle download works directly: get `archive.zip` from the [Diabetes Health Indicators Dataset](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset) and pass it to `prepare`, which picks the three-class CSV out of it. We checked that this CSV is byte-for-byte the file used in stages 1–4 (SHA-256 `a971809d…`), and re-running `prepare` reproduces both prepared files exactly.
+
+### Run it
+
+```bash
+# Prepare the cohort with the stage 1-4 command, exactly as above
+diabetes-screening prepare --input data/raw/archive.zip \
+  --output data/derived/combined_BRFSS2015.csv --endpoint combined
+
+# Stage 6 on the committed split (the split every teammate should share)
+diabetes-screening-model train \
+  --input data/derived/combined_BRFSS2015.csv \
+  --provenance data/derived/combined_BRFSS2015.provenance.json \
+  --split reports/modeling/combined/split \
+  --output outputs/combined/training
+
+# Optional: rebuild stage 5 from scratch (it gives byte-identical split files)
+diabetes-screening-model split --input data/derived/combined_BRFSS2015.csv \
+  --provenance data/derived/combined_BRFSS2015.provenance.json --output outputs/combined/split
+diabetes-screening-model imbalance --input data/derived/combined_BRFSS2015.csv \
+  --provenance data/derived/combined_BRFSS2015.provenance.json \
+  --split outputs/combined/split --output outputs/combined/imbalance
+```
+
+For the prediabetes-only sensitivity analysis, swap `combined` for `prediabetes` everywhere. On a two-core laptop, `split` takes seconds, `imbalance` a few minutes and `train` about 20 to 25 minutes (mostly the random forest search; `--models logistic_regression,xgboost` skips it). As with stages 1–4, every command checks its input against the provenance file and refuses to write into an existing folder.
+
+### What's in `reports/modeling/`
+
+| Folder (per endpoint) | What it holds |
+| --- | --- |
+| `split/` | `split.json` (seed, input hash, counts per side and fold), `split_assignment.csv.gz` (which rows are test and which fold each training row is in), `profiles.json` (the repeated-answers audit) |
+| `imbalance/` | Weighted vs unweighted models on the five folds, the repeated-profile check, a chart and a README |
+| `training/` | Model comparison (`comparison.csv`, `paired_differences.csv`), every candidate tried (`tuning.csv`), the chosen model (`selection.json`), adjusted odds ratios, permutation importance, the reduced feature-set check, charts, a README and the fitted logistic regression and XGBoost pipelines (`models/`) |
+
+None of these files contain survey answers. The fitted random forest (about 16 MB) and the out-of-fold predictions (one row per respondent, needed in stage 7) aren't committed; `train` writes both to your local `outputs/` folder.
+
+### What we found
+
+**The split (stage 5).** One stratified 80/20 split with seed 42, and five fixed folds inside the training part. For the combined endpoint that's 202,944 training rows (31,982 positive) and 50,736 locked test rows (7,995 positive). The test rows can only be read after stage 7 saves a threshold for this exact split, and so far no stage has used a single one of them.
+
+**Two worries from the plan, both tested (stage 5).** About 15% of respondents share their exact answers with someone else. They're different people (over 1,800 shared profiles include both outcomes), and keeping them together in the folds changed PR-AUC by 0.001 at most, so a plain split is fine. Class weighting didn't help any model rank people better (PR-AUC within 0.001). It only pushed predicted risks up, from the true 15.8% to about 39%, which has the same effect as lowering the cutoff. So the models are unweighted, and stage 7 will choose the cutoff on purpose.
+
+**The models (stage 6, combined endpoint, mean of five validation folds).**
+
+| Model | PR-AUC | ROC-AUC | Share of people flagged to catch 80% of cases |
+| --- | --- | --- | --- |
+| No model (everyone gets the average risk) | 0.158 | 0.500 | 100% |
+| Paper diabetes risk checklist (NIDDK/ADA) | 0.325 | 0.756 | 48% at its own 5-point cutoff |
+| Logistic regression | 0.439 | 0.819 | 39% |
+| Random forest | 0.456 | 0.822 | 39% |
+| **XGBoost (chosen)** | **0.461** | **0.826** | **38%** |
+
+XGBoost beat the random forest in all five folds (corrected t-test p = 0.005), so under the rule we wrote down before the run, it goes forward to stage 7. Compared with the paper checklist, it finds the same 80% of cases while raising roughly 95 fewer false alarms per 1,000 people screened. The step from the checklist to any model is large; the step from logistic regression to XGBoost is small (+0.022 PR-AUC).
+
+**What drives the predictions.** In every model, the answers that matter most are BMI, general health, age, high blood pressure and high cholesterol. Dropping the five answers that partly reflect contact with doctors costs about 0.03 PR-AUC, but the models still beat the checklist easily. Adjusted odds ratios from statsmodels show that several single-answer associations from stage 4 shrink, vanish or even reverse once the other answers are held fixed. Physical-health days reverse, and smoking and vegetables lose their association, which is a useful warning about reading unadjusted comparisons. All variance inflation factors are below 2.
+
+**Prediabetes only (sensitivity analysis).** The same ranking holds (XGBoost PR-AUC 0.060 against 0.021 for no model and 0.040 for the checklist), but the signal is weak: catching 80% of cases means flagging about 44% of people, and only about 4% of those flagged have prediabetes. Many people with prediabetes don't know they have it, so the labels themselves are noisy.
+
+These are validation numbers on training rows. The held-out test set, opened once in stage 7, will give the final figures.
+
+### Where we departed from the stages 5–8 plan
+
+The plan in `docs/stages-5-8-plan.md` is left as written; the details of each change are in the two write-ups.
+
+- We follow the README and use the combined endpoint as the main one. Section 0 of the plan predates that switch.
+- We measured whether people with identical answers inflate the scores, found they don't, and used a plain stratified split instead of a grouped one.
+- We left the classes unweighted (including XGBoost's `scale_pos_weight`), because weighting only moved the cutoff.
+- Our checklist baseline is the published diabetes risk test rather than a hand-made rule.
+- We added a separate `diabetes-screening-model` command rather than editing the stage 1–4 command.
+
+### Tests
+
+`python -m pytest` now runs 57 tests: the 39 stage 1–4 tests, unchanged, plus 18 new ones. All pass on Python 3.12 with `requirements.lock` (the CI setup), with 98.46% statement coverage. The new tests cover split stratification and reproducibility, the test-set lock, scalers fitted on training folds only, the checklist scoring, the screening metrics, the corrected t-test, the selection rule, the odds-ratio code and both new commands from start to finish.
+
+### Use of AI tools
+
+The stage 5 and 6 code, tests and write-ups were drafted with help from an AI assistant (Claude, by Anthropic), as noted in each new file. The team members responsible for these stages should review and run them, be ready to explain each step, and record their own review in the notes at the end of [splitting](docs/splitting.md) and [training](docs/training.md), as the course's generative-AI policy requires.

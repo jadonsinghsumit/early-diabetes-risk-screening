@@ -1,0 +1,61 @@
+{
+  "endpoint": "combined",
+  "input_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
+  "strategy": "stratified",
+  "seed": 42,
+  "test_size": 0.2,
+  "n_splits": 5,
+  "assignment_file": "split_assignment.csv.gz",
+  "assignment_sha256": "e8a579495ac84c636afd9aadee7b2e1d5273368b83e797089f1be6c6b805db7c",
+  "fold_codes": {
+    "-1": "locked test set",
+    "0..k-1": "cross-validation fold of a training row"
+  },
+  "rows": 253680,
+  "train": {
+    "rows": 202944,
+    "positives": 31982,
+    "prevalence": 0.15759027120782088
+  },
+  "test": {
+    "rows": 50736,
+    "positives": 7995,
+    "prevalence": 0.15758041627246924
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "rows": 40589,
+      "positives": 6396,
+      "prevalence": 0.15757963980388776
+    },
+    {
+      "fold": 1,
+      "rows": 40589,
+      "positives": 6396,
+      "prevalence": 0.15757963980388776
+    },
+    {
+      "fold": 2,
+      "rows": 40589,
+      "positives": 6397,
+      "prevalence": 0.1576042770208677
+    },
+    {
+      "fold": 3,
+      "rows": 40589,
+      "positives": 6397,
+      "prevalence": 0.1576042770208677
+    },
+    {
+      "fold": 4,
+      "rows": 40588,
+      "positives": 6396,
+      "prevalence": 0.15758352222331723
+    }
+  ],
+  "test_rows_sharing_a_profile_with_training": 6910,
+  "share_of_test_rows_sharing_a_profile": 0.13619520655944498,
+  "scikit_learn": "1.9.1",
+  "test_set_policy": "Read the test rows only through locked_test_data(), after threshold.json records this assignment_sha256 (roadmap stage 7)."
+}
