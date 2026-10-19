@@ -45,7 +45,8 @@ def prepare_binary(source, destination, endpoint, expected_rows=EXPECTED_ROWS):
     frame = frame.loc[frame[TARGET].notna()].copy()
     cleaned, _ = clean_data(frame)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    cleaned.to_csv(destination, index=False)
+    # Unix line endings on every platform, so the derived hash is the same on Windows, macOS and Linux.
+    cleaned.to_csv(destination, index=False, lineterminator="\n")
     metadata = {
         "source_filename": source.name, "archive_member": member,
         "source_sha256": hashlib.sha256(uploaded).hexdigest(),
