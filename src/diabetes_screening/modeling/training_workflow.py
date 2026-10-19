@@ -14,12 +14,13 @@ from sklearn.base import clone
 
 from ..ingestion import write_json
 from ..schema import EXPECTED_ROWS
+from . import portable
 from .cohort import load_cohort
 from .imbalance import MODELS
 from .inference import odds_ratio_table, plot_odds_ratios
 from .metrics import SCREENING_RECALL
 from .split import load_split, training_data
-from .stage5 import PACKAGES, _markdown, _mean_sd, endpoint_label
+from .split_workflow import PACKAGES, _markdown, _mean_sd, endpoint_label
 from .training import (DEFAULT_ITERATIONS, LABELS, SEARCH_SPACES, SELECTION_RULE, _plain, baseline_results,
                        choose_model, feature_set_results, fold_results, paired_differences, plot_comparison,
                        plot_importance, summarize_folds, tune, tuning_table)
@@ -185,5 +186,8 @@ def _write_readme(destination, label, cohort, plan, y, summary, paired, selectio
 
 
 def load_pipeline(path):
-    """Load a fitted pipeline saved by `train` (scikit-learn/XGBoost versions should match the manifest)."""
-    return joblib.load(path)
+    """Load a fitted pipeline saved by `train` (scikit-learn/XGBoost versions should match the manifest).
+
+    Works on any operating system, including XGBoost models pickled on another one (see portable.py).
+    """
+    return portable.load_pipeline(path)
