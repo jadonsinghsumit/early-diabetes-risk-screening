@@ -1,15 +1,16 @@
 {
   "source": {
-    "filename": "diabetes_combined_derived_BRFSS2015.csv",
+    "filename": "combined_BRFSS2015.csv",
     "sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f"
   },
   "expected_rows": 253680,
+  "expected_source_rows": 253680,
   "validation_mode": "full-shape source (provenance requires review)",
   "endpoint": "combined",
   "source_provenance": {
-    "source_filename": "diabetes_012_health_indicators_BRFSS2015.csv.zip",
+    "source_filename": "archive.zip",
     "archive_member": "diabetes_012_health_indicators_BRFSS2015.csv",
-    "source_sha256": "463b5430e1cea3c518227f3179317f2e3c9ccd4f76fb7e7ea125bf87305aee98",
+    "source_sha256": "ecbd65727a3b9b730bfd3ba547a181767522f1188fb16077e885945c1030f046",
     "source_csv_sha256": "a971809d0786d2d7d7f6070f83dfe8af9d860ea33a79e0e2701c8a49f78f9861",
     "derived_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
     "endpoint": "combined",
@@ -27,16 +28,19 @@
       "0": 213703,
       "1": 39977
     },
+    "source_rows": 253680,
+    "excluded_rows": 0,
+    "exclusion_reason": "None",
     "rows": 253680,
     "columns": 22,
-    "derivation": "User-uploaded three-class BRFSS2015 file; explicit binary recoding, no dropped rows",
+    "derivation": "User-uploaded three-class BRFSS2015 file; explicit endpoint mapping and recorded exclusions",
     "is_official_binary_file": false
   },
   "duplicate_policy": "keep",
   "analysis_rows": 253680,
   "tests_executed": 25,
   "tests_skipped": 0,
-  "python": "3.12.14",
+  "python": "3.13.9",
   "packages": {
     "pandas": "3.0.6",
     "numpy": "2.5.4",

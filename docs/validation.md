@@ -26,8 +26,8 @@ Dependency checks and package builds also pass. Seaborn/Matplotlib emit upstream
 
 ## Remaining limits
 
-Both reports predate the latest code changes (plot labels, per-unit odds ratios, review flags) and must be regenerated with the README commands; their counts do not change.
+Both reports were regenerated with the current code (plot labels, per-unit odds ratios, review flags) during stage 8. Every count and summary table came out identical; see [the stages 5–8 record](modeling-validation.md#stage-8).
 
 Live UCI/Kaggle downloads still return HTTP 403. This prevents independent validation of the upstream binary release but does not block the three-class uploaded source analysis. The survey-year documentation discrepancy, self-report, unavailable survey weights/clusters, confounding, and lack of longitudinal outcomes remain limitations.
 
-Stages 5–8 and newer survey harmonization remain outside the current implementation. Later modeling must avoid leakage (including identical profiles), handle class imbalance and use evaluation measures appropriate to screening; results cannot be presented as future-onset prediction without suitable data. The combined positives include 35,346 people with a current diagnosis, so the model partly learns who already has diabetes.
+Stages 5–8 are now implemented; their checks are in [the stages 5–8 record](modeling-validation.md). Newer survey harmonization remains outside the project. Modeling must avoid leakage (including identical profiles), handle class imbalance and use evaluation measures appropriate to screening; results cannot be presented as future-onset prediction without suitable data. The combined positives include 35,346 people with a current diagnosis, so the model partly learns who already has diabetes.
