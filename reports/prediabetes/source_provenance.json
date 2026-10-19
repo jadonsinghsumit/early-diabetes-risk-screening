@@ -1,7 +1,7 @@
 {
-  "source_filename": "diabetes_012_health_indicators_BRFSS2015.csv.zip",
+  "source_filename": "archive.zip",
   "archive_member": "diabetes_012_health_indicators_BRFSS2015.csv",
-  "source_sha256": "463b5430e1cea3c518227f3179317f2e3c9ccd4f76fb7e7ea125bf87305aee98",
+  "source_sha256": "ecbd65727a3b9b730bfd3ba547a181767522f1188fb16077e885945c1030f046",
   "source_csv_sha256": "a971809d0786d2d7d7f6070f83dfe8af9d860ea33a79e0e2701c8a49f78f9861",
   "derived_sha256": "33018d988b7abcc627bc03717a0dfb8a2c7685814776a83182e7bbf16e7978e3",
   "endpoint": "prediabetes",
