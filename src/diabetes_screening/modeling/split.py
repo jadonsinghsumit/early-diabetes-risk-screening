@@ -120,8 +120,9 @@ def save_split(plan, cohort, directory):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=False)
     assignment = pd.DataFrame({"row": np.arange(len(plan.fold)), "fold": plan.fold})
-    # mtime=0 keeps the gzip bytes identical across runs, so the file itself is reproducible.
-    assignment.to_csv(directory / ASSIGNMENT_FILE, index=False, compression={"method": "gzip", "mtime": 0})
+    # mtime=0 and Unix line endings keep the gzip bytes identical across runs and platforms.
+    assignment.to_csv(directory / ASSIGNMENT_FILE, index=False, compression={"method": "gzip", "mtime": 0},
+                      lineterminator="\n")
     summary = {
         "endpoint": plan.endpoint, "input_sha256": plan.input_sha256, "strategy": plan.strategy,
         "seed": plan.seed, "test_size": plan.test_size, "n_splits": plan.n_splits,
