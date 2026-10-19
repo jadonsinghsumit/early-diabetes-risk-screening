@@ -40,10 +40,10 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 
 | File | What it is |
 | --- | --- |
-| [technical-report.pdf](docs/deliverables/technical-report.pdf) | The technical report (8 pages): data, methods, results, the false-negative discussion, limitations and reproducibility |
-| [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 14-slide presentation |
-| [presentation-script.md](docs/deliverables/presentation-script.md) | Speaker notes for those slides, about 9.5–10 minutes |
-| [presentation-video.mp4](docs/deliverables/presentation-video.mp4) | The 10-minute presentation video: all 14 slides plus a short demo with real output from the `threshold` and `test` commands, captioned with the full speaker script ([captions as .srt](docs/deliverables/presentation-video.srt)) |
+| [technical-report.pdf](docs/deliverables/technical-report.pdf) | The technical report (12 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations and reproducibility |
+| [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 19-slide presentation, every slide labelled with its roadmap stage, plus a sources slide |
+| [presentation-script.md](docs/deliverables/presentation-script.md) | Speaker notes for those slides, about 9 minutes |
+| [presentation-video.mp4](docs/deliverables/presentation-video.mp4) | The 9.5-minute presentation video: all 19 slides plus a short demo with real output from the `threshold` and `test` commands, captioned with the full speaker script ([captions as .srt](docs/deliverables/presentation-video.srt)) |
 
 The video is silent, with captions burned in and also supplied as an `.srt` file. If the team records the talk in their own voices, the captions can serve as a teleprompter.
 

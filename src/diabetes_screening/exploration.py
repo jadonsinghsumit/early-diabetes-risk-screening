@@ -16,7 +16,7 @@ DISTRIBUTIONS = ["BMI", "Age", "MentHlth", "PhysHlth", "GenHlth"]
 
 def _save(figure, path):
     figure.tight_layout()
-    figure.savefig(path, dpi=180, bbox_inches="tight")
+    figure.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(figure)
 
 
