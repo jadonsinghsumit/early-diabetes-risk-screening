@@ -1,347 +1,379 @@
 1
-00:00:00,000 --> 00:00:03,004
+00:00:00,000 --> 00:00:02,973
 Hi, we’re Sumit, Priyamvadha and Amiya.
 
 2
-00:00:03,004 --> 00:00:12,682
+00:00:02,973 --> 00:00:12,553
 Our question: can the answers adults give on a health survey pick out people with diabetes or prediabetes, while missing as few of them as possible?
 
 3
-00:00:12,682 --> 00:00:22,360
+00:00:12,553 --> 00:00:22,133
 We used the CDC’s 2015 BRFSS survey, about a quarter of a million adults, and followed an eight-stage roadmap. Each slide is labelled with its stage.
 
 4
-00:00:22,360 --> 00:00:32,038
+00:00:22,133 --> 00:00:31,713
 A questionnaire costs almost nothing, so if it can tell us who should get a blood test, screening reaches people who would otherwise never be tested.
 
 5
-00:00:32,038 --> 00:00:36,376
+00:00:31,713 --> 00:00:36,007
 Just under 16% of these adults report diabetes or prediabetes.
 
 6
-00:00:36,376 --> 00:00:46,388
+00:00:36,007 --> 00:00:45,917
 A missed case is the expensive mistake, so we fixed the target at catching 80% of cases and compare approaches by how many people they must flag,
 
 7
-00:00:46,388 --> 00:00:50,393
+00:00:45,917 --> 00:00:49,881
 against the paper risk test clinics already hand out.
 
 8
-00:00:50,393 --> 00:00:59,737
+00:00:49,881 --> 00:00:59,130
 Here is the roadmap we followed. Stage one checks the data and stage two cleans it. Stages three and four explore it and test associations.
 
 9
-00:00:59,737 --> 00:01:05,410
+00:00:59,130 --> 00:01:04,746
 Stage five sets up an honest evaluation, stage six trains and tunes the models,
 
 10
-00:01:05,410 --> 00:01:14,754
+00:01:04,746 --> 00:01:13,995
 and stage seven chooses the screening cutoff and opens the test set once. Stage eight is this handoff. Every following slide carries its stage number.
 
 11
-00:01:14,754 --> 00:01:17,090
-Stage one, data ingestion.
+00:01:13,995 --> 00:01:26,548
+Stage 1 of 8: data ingestion and quality control.
 
 12
-00:01:17,090 --> 00:01:26,101
-We loaded Kaggle’s version of the 2015 BRFSS and checked its shape, 253,680 rows by 22 columns, its column types, value ranges and labels,
+00:01:26,548 --> 00:01:28,860
+Stage one, data ingestion.
 
 13
-00:01:26,101 --> 00:01:30,439
-and recorded hashes so anyone can confirm the exact file.
+00:01:28,860 --> 00:01:37,779
+We loaded Kaggle’s version of the 2015 BRFSS and checked its shape, 253,680 rows by 22 columns, its column types, value ranges and labels,
 
 14
-00:01:30,439 --> 00:01:39,450
-We used the three-class file because it separates prediabetes from diabetes, and we count both as positive: 15.8%. The roadmap’s 14% is diabetes alone.
+00:01:37,779 --> 00:01:42,073
+and recorded hashes so anyone can confirm the exact file.
 
 15
-00:01:39,450 --> 00:01:43,121
-A sensitivity analysis looks at prediabetes by itself.
+00:01:42,073 --> 00:01:50,992
+We used the three-class file because it separates prediabetes from diabetes, and we count both as positive: 15.8%. The roadmap’s 14% is diabetes alone.
 
 16
-00:01:43,121 --> 00:01:52,799
-Stage two, cleaning. There were no missing or invalid codes, and the pipeline is built to stop rather than guess, so nothing was imputed or dropped.
+00:01:50,992 --> 00:01:54,626
+A sensitivity analysis looks at prediabetes by itself.
 
 17
-00:01:52,799 --> 00:01:59,473
-About 24,000 rows repeat someone else’s answers, but with 21 coarse answers different people often answer identically,
+00:01:54,626 --> 00:02:06,518
+Stage 2 of 8: preprocessing and cleaning.
 
 18
-00:01:59,473 --> 00:02:03,478
-so we kept them and tested their effect later.
+00:02:06,518 --> 00:02:16,098
+Stage two, cleaning. There were no missing or invalid codes, and the pipeline is built to stop rather than guess, so nothing was imputed or dropped.
 
 19
-00:02:03,478 --> 00:02:13,490
-We sorted the answers into 14 yes/no, four ordered bands and three counts, and flagged unusual but valid answers, like a BMI over 60, without changing them.
+00:02:16,098 --> 00:02:22,705
+About 24,000 rows repeat someone else’s answers, but with 21 coarse answers different people often answer identically,
 
 20
-00:02:13,490 --> 00:02:21,499
-Stage three, exploration. About one adult in six reports diabetes or prediabetes, so accuracy would mislead: always answering no scores 84%.
+00:02:22,705 --> 00:02:26,669
+so we kept them and tested their effect later.
 
 21
-00:02:21,499 --> 00:02:27,506
-People with the condition have a median BMI of 31 against 27 and are older.
+00:02:26,669 --> 00:02:36,579
+We sorted the answers into 14 yes/no, four ordered bands and three counts, and flagged unusual but valid answers, like a BMI over 60, without changing them.
 
 22
-00:02:27,506 --> 00:02:34,180
-On the correlation heatmap, general health, high blood pressure, BMI, difficulty walking and high cholesterol stand out,
+00:02:36,579 --> 00:02:48,471
+Stage 3 of 8: exploratory data analysis.
 
 23
-00:02:34,180 --> 00:02:39,853
-and several of them move together, which is why we later adjust for them.
+00:02:48,471 --> 00:02:56,399
+Stage three, exploration. About one adult in six reports diabetes or prediabetes, so accuracy would mislead: always answering no scores 84%.
 
 24
-00:02:39,853 --> 00:02:42,189
-Stage four, hypothesis tests.
+00:02:56,399 --> 00:03:02,345
+People with the condition have a median BMI of 31 against 27 and are older.
 
 25
-00:02:42,189 --> 00:02:50,198
-We planned 25 tests: chi-square for the yes/no and ordered answers, and Mann–Whitney U for BMI, health days and the bands,
+00:03:02,345 --> 00:03:08,952
+On the correlation heatmap, general health, high blood pressure, BMI, difficulty walking and high cholesterol stand out,
 
 26
-00:02:50,198 --> 00:02:52,200
-with Benjamini–Hochberg correction.
+00:03:08,952 --> 00:03:14,568
+and several of them move together, which is why we later adjust for them.
 
 27
-00:02:52,200 --> 00:03:00,543
-All 25 were significant, which with a quarter of a million people says little, so we report effect sizes with confidence intervals.
+00:03:14,568 --> 00:03:26,460
+Stage 4 of 8: hypotheses and statistics.
 
 28
-00:03:00,543 --> 00:03:07,217
-High blood pressure goes with almost five times the odds; general health has the largest rank effect.
+00:03:26,460 --> 00:03:28,772
+Stage four, hypothesis tests.
 
 29
-00:03:07,217 --> 00:03:12,557
-The biggest odds ratio, for a cholesterol check, mostly measures contact with doctors.
+00:03:28,772 --> 00:03:36,700
+We planned 25 tests: chi-square for the yes/no and ordered answers, and Mann–Whitney U for BMI, health days and the bands,
 
 30
-00:03:12,557 --> 00:03:15,227
-Stage five, splitting and imbalance.
+00:03:36,700 --> 00:03:38,682
+with Benjamini–Hochberg correction.
 
 31
-00:03:15,227 --> 00:03:23,236
-We fixed one stratified split for the whole team: 80% for training, divided into five fixed folds, and 20% locked away;
+00:03:38,682 --> 00:03:46,940
+All 25 were significant, which with a quarter of a million people says little, so we report effect sizes with confidence intervals.
 
 32
-00:03:23,236 --> 00:03:32,914
-the code refuses to release the test rows until a cutoff is saved. Scaling happens inside the model pipelines, so it only learns from training folds.
+00:03:46,940 --> 00:03:53,547
+High blood pressure goes with almost five times the odds; general health has the largest rank effect.
 
 33
-00:03:32,914 --> 00:03:36,251
-Repeated answers did not inflate the scores.
+00:03:53,547 --> 00:03:58,832
+The biggest odds ratio, for a cholesterol check, mostly measures contact with doctors.
 
 34
-00:03:36,251 --> 00:03:44,928
-And class weighting, compared with no weighting, didn’t rank people any better; it only inflated risks to 39%, so we kept honest probabilities.
+00:03:58,832 --> 00:04:10,724
+Stage 5 of 8: splitting and imbalance.
 
 35
-00:03:44,928 --> 00:03:47,598
-Stage six, training and tuning.
+00:04:10,724 --> 00:04:13,367
+Stage five, splitting and imbalance.
 
 36
-00:03:47,598 --> 00:03:55,941
-We tuned logistic regression as the interpretable baseline, a random forest and XGBoost, all on the same stratified folds, scored by PR-AUC.
+00:04:13,367 --> 00:04:21,295
+We fixed one stratified split for the whole team: 80% for training, divided into five fixed folds, and 20% locked away;
 
 37
-00:03:55,941 --> 00:04:05,953
-The big jump is from the paper checklist to any model: to catch 80% of cases the checklist flags half of everyone, the models 38 to 39%.
+00:04:21,295 --> 00:04:30,875
+the code refuses to release the test rows until a cutoff is saved. Scaling happens inside the model pipelines, so it only learns from training folds.
 
 38
-00:04:05,953 --> 00:04:11,626
-Under the rule we wrote down first, XGBoost was chosen, winning all five folds.
+00:04:30,875 --> 00:04:34,178
+Repeated answers did not inflate the scores.
 
 39
-00:04:11,626 --> 00:04:17,633
-Logistic regression is close, if you need a model you can read line by line.
+00:04:34,178 --> 00:04:42,767
+And class weighting, compared with no weighting, didn’t rank people any better; it only inflated risks to 39%, so we kept honest probabilities.
 
 40
-00:04:17,633 --> 00:04:21,304
-Still stage six: what do the models use?
+00:04:42,767 --> 00:04:54,659
+Stage 6 of 8: training and tuning.
 
 41
-00:04:21,304 --> 00:04:28,980
-Shuffling one answer at a time, all three agree on BMI, general health, age, high blood pressure and high cholesterol.
+00:04:54,659 --> 00:04:57,302
+Stage six, training and tuning.
 
 42
-00:04:28,980 --> 00:04:36,656
-Separately, a statsmodels regression with all 21 answers gives adjusted odds ratios with intervals, and it warns against one-at-a-time numbers:
+00:04:57,302 --> 00:05:05,560
+We tuned logistic regression as the interpretable baseline, a random forest and XGBoost, all on the same stratified folds, scored by PR-AUC.
 
 43
-00:04:36,656 --> 00:04:44,332
-bad physical-health days reverse once general health is included, smoking’s association disappears and exercise mostly works through BMI and health.
+00:05:05,560 --> 00:05:15,470
+The big jump is from the paper checklist to any model: to catch 80% of cases the checklist flags half of everyone, the models 38 to 39%.
 
 44
-00:04:44,332 --> 00:04:46,334
-Stage seven, evaluation.
+00:05:15,470 --> 00:05:21,086
+Under the rule we wrote down first, XGBoost was chosen, winning all five folds.
 
 45
-00:04:46,334 --> 00:04:53,676
-We chose the cutoff on training data only: the saved model was refitted on four folds at a time,
+00:05:21,086 --> 00:05:27,032
+Logistic regression is close, if you need a model you can read line by line.
 
 46
-00:04:53,676 --> 00:04:59,349
-so every training person got a risk from a model that never saw them.
+00:05:27,032 --> 00:05:30,666
+Still stage six: what do the models use?
 
 47
-00:04:59,349 --> 00:05:07,692
-The rule, written before the run: the highest cutoff that still catches 80% of cases. That is a predicted risk of 0.153.
+00:05:30,666 --> 00:05:38,264
+Shuffling one answer at a time, all three agree on BMI, general health, age, high blood pressure and high cholesterol.
 
 48
-00:05:07,692 --> 00:05:16,703
-Calibration was already excellent, so no adjustment. Each extra ten points of sensitivity would cost roughly 90 to 130 more people flagged per thousand.
+00:05:38,264 --> 00:05:45,862
+Separately, a statsmodels regression with all 21 answers gives adjusted odds ratios with intervals, and it warns against one-at-a-time numbers:
 
 49
-00:05:16,703 --> 00:05:25,380
-Demo, step one: we try to score the test set before any cutoff exists. The command stops with an error and writes nothing.
+00:05:45,862 --> 00:05:53,460
+bad physical-health days reverse once general health is included, smoking’s association disappears and exercise mostly works through BMI and health.
 
 50
-00:05:25,380 --> 00:05:29,385
-That lock is what keeps the final numbers honest.
+00:05:53,460 --> 00:06:05,352
+Stage 7 of 8: evaluation and thresholds.
 
 51
-00:05:29,385 --> 00:05:36,393
-Step two: the threshold command reads only the 202,944 training rows, refits the saved model fold by fold,
+00:06:05,352 --> 00:06:07,334
+Stage seven, evaluation.
 
 52
-00:05:36,393 --> 00:05:40,064
-and locks the cutoff at 0.1530 in threshold.json.
+00:06:07,334 --> 00:06:14,601
+We chose the cutoff on training data only: the saved model was refitted on four folds at a time,
 
 53
-00:05:40,064 --> 00:05:47,072
-Step three: with the cutoff saved, the test set is scored once, with 1,000 bootstrap resamples per model.
+00:06:14,601 --> 00:06:20,217
+so every training person got a risk from a model that never saw them.
 
 54
-00:05:47,072 --> 00:05:54,080
-XGBoost catches 79.4% of cases and flags 37.6% of people; the checklist flags 47.3% for the same cases.
+00:06:20,217 --> 00:06:28,475
+The rule, written before the run: the highest cutoff that still catches 80% of cases. That is a predicted risk of 0.153.
 
 55
-00:05:54,080 --> 00:06:01,088
-Finally, the committed model and cutoff score two made-up people: a healthy 35-year-old at 1% risk, not flagged,
+00:06:28,475 --> 00:06:37,394
+Calibration was already excellent, so no adjustment. Each extra ten points of sensitivity would cost roughly 90 to 130 more people flagged per thousand.
 
 56
-00:06:01,088 --> 00:06:08,430
-and a 65-year-old with high blood pressure at 60%, flagged. The full test suite passes: 63 tests, 98% coverage.
+00:06:37,394 --> 00:06:45,983
+Demo, step one: we try to score the test set before any cutoff exists. The command stops with an error and writes nothing.
 
 57
-00:06:08,430 --> 00:06:12,435
-The result on the 50,736 people we held back.
+00:06:45,983 --> 00:06:49,947
+That lock is what keeps the final numbers honest.
 
 58
-00:06:12,435 --> 00:06:20,778
-At the locked cutoff the model found 79.4% of people with diabetes or prediabetes, right on target, and flagged 37.6% of people;
+00:06:49,947 --> 00:06:56,884
+Step two: the threshold command reads only the 202,944 training rows, refits the saved model fold by fold,
 
 59
-00:06:20,778 --> 00:06:30,456
-one in three of those flagged has the condition. Against the paper checklist, which finds the same share, that’s 96 fewer false alarms per thousand people.
+00:06:56,884 --> 00:07:00,518
+and locks the cutoff at 0.1530 in threshold.json.
 
 60
-00:06:30,456 --> 00:06:35,462
-Precision, specificity, F2 and both AUCs match validation, so nothing was overfitted.
+00:07:00,518 --> 00:07:07,455
+Step three: with the cutoff saved, the test set is scored once, with 1,000 bootstrap resamples per model.
 
 61
-00:06:35,462 --> 00:06:39,133
-These are the curves the roadmap asks for.
+00:07:07,455 --> 00:07:14,392
+XGBoost catches 79.4% of cases and flags 37.6% of people; the checklist flags 47.3% for the same cases.
 
 62
-00:06:39,133 --> 00:06:46,475
-On both the precision-recall and the ROC curve, the two models sit above the paper checklist at every cutoff,
+00:07:14,392 --> 00:07:21,329
+Finally, the committed model and cutoff score two made-up people: a healthy 35-year-old at 1% risk, not flagged,
 
 63
-00:06:46,475 --> 00:06:50,146
-and the dots mark each locked operating point.
+00:07:21,329 --> 00:07:28,596
+and a 65-year-old with high blood pressure at 60%, flagged. The full test suite passes: 63 tests, 98% coverage.
 
 64
-00:06:50,146 --> 00:06:57,822
-On the right is calibration: predicted risks on the test set match the observed rates, with a slope of 0.99,
+00:07:28,596 --> 00:07:32,560
+The result on the 50,736 people we held back.
 
 65
-00:06:57,822 --> 00:07:02,160
-so the model’s probabilities can be read as real risks.
+00:07:32,560 --> 00:07:40,818
+At the locked cutoff the model found 79.4% of people with diabetes or prediabetes, right on target, and flagged 37.6% of people;
 
 66
-00:07:02,160 --> 00:07:07,500
-In clinic terms: of every thousand people screened, about 158 have the condition.
+00:07:40,818 --> 00:07:50,398
+one in three of those flagged has the condition. Against the paper checklist, which finds the same share, that’s 96 fewer false alarms per thousand people.
 
 67
-00:07:07,500 --> 00:07:15,176
-The model sends 376 for a blood test, finds 125 and misses 33; that’s the confusion matrix on the left.
+00:07:50,398 --> 00:07:55,353
+Precision, specificity, F2 and both AUCs match validation, so nothing was overfitted.
 
 68
-00:07:15,176 --> 00:07:22,518
-The paper checklist finds the same number but sends almost 100 more people, so its specificity is much lower.
+00:07:55,353 --> 00:07:58,987
+These are the curves the roadmap asks for.
 
 69
-00:07:22,518 --> 00:07:26,189
-Logistic regression captures about 90% of the gain.
+00:07:58,987 --> 00:08:06,254
+On both the precision-recall and the ROC curve, the two models sit above the paper checklist at every cutoff,
 
 70
-00:07:26,189 --> 00:07:28,525
-Now the false negatives.
+00:08:06,254 --> 00:08:09,888
+and the dots mark each locked operating point.
 
 71
-00:07:28,525 --> 00:07:37,869
-The model leans on BMI, general health, age, blood pressure and cholesterol, so a case who looks ordinary on all five is invisible to it;
+00:08:09,888 --> 00:08:17,486
+On the right is calibration: predicted risks on the test set match the observed rates, with a slope of 0.99,
 
 72
-00:07:37,869 --> 00:07:43,209
-the missed cases have the same average BMI as people without the condition.
+00:08:17,486 --> 00:08:21,780
+so the model’s probabilities can be read as real risks.
 
 73
-00:07:43,209 --> 00:07:49,216
-Sensitivity is 44% for under-45s and 68% at incomes of 50 thousand dollars and up.
+00:08:21,780 --> 00:08:27,065
+In clinic terms: of every thousand people screened, about 158 have the condition.
 
 74
-00:07:49,216 --> 00:07:56,224
-And it finds 81% of diagnosed diabetes but only 65% of prediabetes, the group screening is really for.
+00:08:27,065 --> 00:08:34,663
+The model sends 376 for a blood test, finds 125 and misses 33; that’s the confusion matrix on the left.
 
 75
-00:07:56,224 --> 00:08:05,235
-We also asked the harder question: leave out everyone who already has diabetes and look for prediabetes alone, with the same pipeline and rules.
+00:08:34,663 --> 00:08:41,930
+The paper checklist finds the same number but sends almost 100 more people, so its specificity is much lower.
 
 76
-00:08:05,235 --> 00:08:14,913
-The model still beats the checklist, finding 81% of cases against 70%, but it flags 44% of everyone and only 4% of those flagged report prediabetes.
+00:08:41,930 --> 00:08:45,564
+Logistic regression captures about 90% of the gain.
 
 77
-00:08:14,913 --> 00:08:19,919
-Many of them may be undiagnosed cases, which this data can’t show.
+00:08:45,564 --> 00:08:47,876
+Now the false negatives.
 
 78
-00:08:19,919 --> 00:08:23,256
-Stage eight includes being clear about limits.
+00:08:47,876 --> 00:08:57,125
+The model leans on BMI, general health, age, blood pressure and cholesterol, so a case who looks ordinary on all five is invisible to it;
 
 79
-00:08:23,256 --> 00:08:32,267
-The labels are self-reported at one moment in 2015, so this finds people who already know their status; it predicts nothing about the future.
+00:08:57,125 --> 00:09:02,410
+the missed cases have the same average BMI as people without the condition.
 
 80
-00:08:32,267 --> 00:08:40,944
-88% of positives already have a diagnosis. Some strong answers partly measure seeing a doctor. One cutoff gives different groups very different trade-offs.
+00:09:02,410 --> 00:09:08,356
+Sensitivity is 44% for under-45s and 68% at incomes of 50 thousand dollars and up.
 
 81
-00:08:40,944 --> 00:08:46,951
-The survey is unweighted and covers one year. And everything here is association, not cause.
+00:09:08,356 --> 00:09:15,293
+And it finds 81% of diagnosed diabetes but only 65% of prediabetes, the group screening is really for.
 
 82
-00:08:46,951 --> 00:08:53,625
-Our sources: the Kaggle and UCI versions of the data, the CDC’s MMWR article and NHANES portal,
+00:09:15,293 --> 00:09:24,212
+We also asked the harder question: leave out everyone who already has diabetes and look for prediabetes alone, with the same pipeline and rules.
 
 83
-00:08:53,625 --> 00:09:02,636
-a historical NCHS report whose date should be checked before citing it as current, and the NIDDK risk test we used as the baseline.
+00:09:24,212 --> 00:09:33,792
+The model still beats the checklist, finding 81% of cases against 70%, but it flags 44% of everyone and only 4% of those flagged report prediabetes.
 
 84
-00:09:02,636 --> 00:09:06,307
-To sum up: with nothing but survey answers,
+00:09:33,792 --> 00:09:38,747
+Many of them may be undiagnosed cases, which this data can’t show.
 
 85
-00:09:06,307 --> 00:09:15,651
-a tuned model finds about eight in ten people with diabetes or prediabetes while sending a fifth fewer people for testing than the paper checklist.
+00:09:38,747 --> 00:09:50,639
+Stage 8 of 8: reporting and handoff.
 
 86
-00:09:15,651 --> 00:09:21,324
-It is weaker for prediabetes and younger people, and it is a research prototype.
+00:09:50,639 --> 00:09:53,942
+Stage eight includes being clear about limits.
 
 87
-00:09:21,324 --> 00:09:30,000
+00:09:53,942 --> 00:10:02,861
+The labels are self-reported at one moment in 2015, so this finds people who already know their status; it predicts nothing about the future.
+
+88
+00:10:02,861 --> 00:10:11,450
+88% of positives already have a diagnosis. Some strong answers partly measure seeing a doctor. One cutoff gives different groups very different trade-offs.
+
+89
+00:10:11,450 --> 00:10:17,396
+The survey is unweighted and covers one year. And everything here is association, not cause.
+
+90
+00:10:17,396 --> 00:10:24,003
+Our sources: the Kaggle and UCI versions of the data, the CDC’s MMWR article and NHANES portal,
+
+91
+00:10:24,003 --> 00:10:32,922
+a historical NCHS report whose date should be checked before citing it as current, and the NIDDK risk test we used as the baseline.
+
+92
+00:10:32,922 --> 00:10:36,556
+To sum up: with nothing but survey answers,
+
+93
+00:10:36,556 --> 00:10:45,805
+a tuned model finds about eight in ten people with diabetes or prediabetes while sending a fifth fewer people for testing than the paper checklist.
+
+94
+00:10:45,805 --> 00:10:51,421
+It is weaker for prediabetes and younger people, and it is a research prototype.
+
+95
+00:10:51,421 --> 00:11:00,000
 Every stage is reproducible, backed by 63 automated tests, and the code, notebooks, reports and technical PDF are in our repository. Thank you.

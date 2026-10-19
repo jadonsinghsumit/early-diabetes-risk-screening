@@ -1,6 +1,6 @@
 # Presentation script
 
-Speaker notes for the 19-slide deck ([slides as PDF](presentation-slides.pdf)), one section per slide, labelled with the roadmap stage each slide covers. About 1,316 words, roughly 9 minutes at a normal speaking pace. The silent [presentation video](presentation-video.mp4) (9.5 minutes) shows these notes as captions over the slides, with a short demo of the real `threshold` and `test` commands after the cutoff slide.
+Speaker notes for the 19-slide deck ([slides as PDF](presentation-slides.pdf)), one section per slide, labelled with the roadmap stage each slide covers. About 1,316 words, roughly 9 minutes at a normal speaking pace. The silent [presentation video](presentation-video.mp4) (11 minutes) is organised by the eight roadmap stages: a title card opens each stage, then these notes run as captions over that stage's slides, with a short demo of the real `threshold` and `test` commands in stage 7.
 
 ## 1. Early Diabetes Risk Screening
 
