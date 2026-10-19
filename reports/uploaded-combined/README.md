@@ -16,4 +16,4 @@ No missing or invalid feature values were found. All rows were retained, includi
 
 For example, high blood pressure has an unadjusted odds ratio of 4.782 (95% CI 4.668–4.898) for the combined endpoint. This is an exploratory association, subject to confounding and unavailable survey design; it is not a causal or diagnostic estimate. Very small p-values may underflow to numeric zero. See the methods document before interpreting the table.
 
-The row-level `cleaned.csv` referenced by the workflow is intentionally excluded from Git; reproduce it with the README commands. Checked-in CSVs here contain aggregate summaries only. The provided ZIP and derived input remain local ignored data, with hashes and mapping in `source_provenance.json`.
+The row-level `cleaned.csv` referenced by the workflow is intentionally excluded from Git; reproduce it with the README commands. Checked-in CSVs here contain aggregate summaries only. The provided ZIP and derived input remain local ignored data, with hashes and mapping in `source_provenance.json`. The modeling stages (5–7) for this endpoint are in [reports/modeling/combined](../modeling/README.md).
