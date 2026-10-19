@@ -1,0 +1,35 @@
+{
+  "stage": "7a",
+  "endpoint": "prediabetes",
+  "input_sha256": "33018d988b7abcc627bc03717a0dfb8a2c7685814776a83182e7bbf16e7978e3",
+  "split_sha256": "7632682314c1f0cbbc9c533f96846ab634ea2e15661ff69d79f1f11fd9aefbc4",
+  "seed": 42,
+  "training_rows_used": 174667,
+  "test_rows_used": 0,
+  "models": {
+    "xgboost": {
+      "model_file": "xgboost.joblib",
+      "model_sha256": "2efdd41db10038c4d95bb5d639c3100936387664e355daa3981a381e437d0cdd",
+      "oof_pr_auc_mean": 0.059892383873452394,
+      "stage6_pr_auc_mean": 0.05988928450255695,
+      "reproduces_stage6": true
+    },
+    "logistic_regression": {
+      "model_file": "logistic_regression.joblib",
+      "model_sha256": "100b0a2b14db48508bd1edfe8f5947ba78bb1138cc31d31dd810b86ee6a496bb",
+      "oof_pr_auc_mean": 0.054996433383448874,
+      "stage6_pr_auc_mean": 0.054996433383448874,
+      "reproduces_stage6": true
+    }
+  },
+  "python": "3.13.9",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "statsmodels": "0.15.0"
+  }
+}
