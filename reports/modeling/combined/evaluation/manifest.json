@@ -1,0 +1,28 @@
+{
+  "stage": "7b",
+  "endpoint": "combined",
+  "input_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
+  "split_sha256": "e8a579495ac84c636afd9aadee7b2e1d5273368b83e797089f1be6c6b805db7c",
+  "threshold_file_sha256": "37a8720f56fe7b46312c48ca50142d82dd02af5ce146cc44c6fef0a266e9df88",
+  "model": "xgboost",
+  "model_sha256": "22aaf6e26196d399df58357fba4af2a9045bcc203f0f114315466863c4a7c464",
+  "threshold": 0.1530025154352188,
+  "test_rows_used": 50736,
+  "training_rows_used": 0,
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 42,
+    "interval": "95% percentile, cutoff held fixed"
+  },
+  "original_classes_checked": true,
+  "python": "3.13.9",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "statsmodels": "0.15.0"
+  }
+}
