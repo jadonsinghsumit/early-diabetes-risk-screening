@@ -34,18 +34,14 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 | 5. Splitting and imbalance | Stratified 80/20 split, locked test set, weighting and leakage checks | [splitting](docs/splitting.md) | [reports/modeling/*/split, imbalance](reports/modeling/README.md) | [05](notebooks/05_splitting_imbalance.ipynb) |
 | 6. Training and tuning | Three tuned models, paper-checklist baseline, odds ratios, importance | [training](docs/training.md) | `reports/modeling/*/training` | [06](notebooks/06_training.ipynb) |
 | 7. Evaluation and threshold | Cutoff locked on training data, one test-set evaluation, subgroups, misses | [evaluation](docs/evaluation.md) | `reports/modeling/*/threshold`, `evaluation` | [07](notebooks/07_evaluation.ipynb) |
-| 8. Reporting and handoff | This README, notebooks, verification record, technical report, presentation | [validation (1–4)](docs/validation.md), [validation (5–8)](docs/modeling-validation.md) | [docs/deliverables](#report-slides-and-video) | – |
+| 8. Reporting and handoff | This README, notebooks, verification record, technical report, presentation | [validation (1–4)](docs/validation.md), [validation (5–8)](docs/modeling-validation.md) | [docs/deliverables](#report-and-slides) | – |
 
-## Report, slides and video
+## Report and slides
 
 | File | What it is |
 | --- | --- |
 | [technical-report.pdf](docs/deliverables/technical-report.pdf) | The technical report (12 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations and reproducibility |
 | [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 19-slide presentation, every slide labelled with its roadmap stage, plus a sources slide |
-| [presentation-script.md](docs/deliverables/presentation-script.md) | Speaker notes for those slides, about 9 minutes |
-| [presentation-video.mp4](docs/deliverables/presentation-video.mp4) | The 11-minute presentation video, organised by the eight roadmap stages: each stage opens with a title card (why, what we did, what it delivered), followed by its slides captioned with the speaker script, with a short demo of the real `threshold` and `test` commands in stage 7 ([captions as .srt](docs/deliverables/presentation-video.srt)) |
-
-The video is silent, with captions burned in and also supplied as an `.srt` file. If the team records the talk in their own voices, the captions can serve as a teleprompter.
 
 ## Data and endpoint
 
