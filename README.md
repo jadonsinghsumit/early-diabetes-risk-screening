@@ -40,8 +40,8 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 
 | File | What it is |
 | --- | --- |
-| [technical-report.pdf](docs/deliverables/technical-report.pdf) | The technical report (12 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations and reproducibility |
-| [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 19-slide presentation, every slide labelled with its roadmap stage, plus a sources slide |
+| [Final-Project-Report-Team3.pdf](docs/deliverables/Final-Project-Report-Team3.pdf) | The technical report (12 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations and reproducibility |
+| [Final-Project-Presentation-Slides-Team3.pdf](docs/deliverables/Final-Project-Presentation-Slides-Team3.pdf) | The 19-slide presentation, every slide labelled with its roadmap stage, plus a sources slide |
 
 ## Data and endpoint
 
