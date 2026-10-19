@@ -93,21 +93,19 @@ def test_xgboost_pipelines_pickled_on_another_platform_still_load(tmp_path, monk
     X = pd.DataFrame({f.name: rng.integers(f.minimum, f.maximum + 1, 400) for f in FIELDS if f.name != TARGET})
     y = (X["BMI"] + 5 * X["HighBP"] + rng.normal(0, 5, 400) > 40).astype(int)
     pipeline = model_factory("xgboost", False)(y).set_params(model__n_estimators=20).fit(X, y)
-    raw = bytearray(pipeline.named_steps["model"].get_booster().__getstate__()["handle"])
-    marker = raw.index(b"rng_state") + len(b"rng_state")  # 'S', then the string's length, then its text
-    size = {"i": 1, "U": 1, "I": 2, "l": 4, "L": 8}[chr(raw[marker + 1])]
-    start = marker + 2 + size
-    length = int.from_bytes(raw[marker + 2:start], "big")
-    raw[start:start + length] = b"x" * length  # a generator state in a layout this build can't parse
-    path = tmp_path / "foreign.joblib"
-    with monkeypatch.context() as patch:
-        patch.setattr(Booster, "__getstate__", lambda self: {"handle": raw})
-        joblib.dump(pipeline, path, compress=3)
-    original = Booster.__setstate__
+    path = tmp_path / "pipeline.joblib"
+    joblib.dump(pipeline, path, compress=3)
+
+    def unreadable(booster, state):
+        # What Windows XGBoost raises for a snapshot pickled on Linux. Simulated, because whether a given
+        # snapshot is unreadable depends on the platform's C++ library, and the test must run everywhere.
+        raise XGBoostError("input stream corrupted")
+
+    monkeypatch.setattr(Booster, "__setstate__", unreadable)
     with pytest.raises(XGBoostError, match="corrupted"):
         joblib.load(path)
     assert np.array_equal(load_pipeline(path).predict_proba(X), pipeline.predict_proba(X))
-    assert Booster.__setstate__ is original
+    assert Booster.__setstate__ is unreadable  # put back after the fallback
     with pytest.raises(ValueError, match="UBJSON"):
         snapshot_model(b"not a snapshot")
 
