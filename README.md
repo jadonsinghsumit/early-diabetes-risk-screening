@@ -34,20 +34,18 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 | 5. Splitting and imbalance | Stratified 80/20 split, locked test set, weighting and leakage checks | [splitting](docs/splitting.md) | [reports/modeling/*/split, imbalance](reports/modeling/README.md) | [05](notebooks/05_splitting_imbalance.ipynb) |
 | 6. Training and tuning | Three tuned models, paper-checklist baseline, odds ratios, importance | [training](docs/training.md) | `reports/modeling/*/training` | [06](notebooks/06_training.ipynb) |
 | 7. Evaluation and threshold | Cutoff locked on training data, one test-set evaluation, subgroups, misses | [evaluation](docs/evaluation.md) | `reports/modeling/*/threshold`, `evaluation` | [07](notebooks/07_evaluation.ipynb) |
-| 8. Reporting and handoff | This README, notebooks, verification record, technical report, presentation | [validation (1–4)](docs/validation.md), [validation (5–8)](docs/modeling-validation.md) | [docs/deliverables](#report-slides-and-demo-video) | – |
+| 8. Reporting and handoff | This README, notebooks, verification record, technical report, presentation | [validation (1–4)](docs/validation.md), [validation (5–8)](docs/modeling-validation.md) | [docs/deliverables](#report-slides-and-video) | – |
 
-## Report, slides and demo video
+## Report, slides and video
 
 | File | What it is |
 | --- | --- |
 | [technical-report.pdf](docs/deliverables/technical-report.pdf) | The technical report (8 pages): data, methods, results, the false-negative discussion, limitations and reproducibility |
 | [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 14-slide presentation |
 | [presentation-script.md](docs/deliverables/presentation-script.md) | Speaker notes for those slides, about 9.5–10 minutes |
-| [demo-video.mp4](docs/deliverables/demo-video.mp4) | A 1 minute 49 second silent demo with captions: the story in slides, plus real output from the `threshold` and `test` commands ([captions as .srt](docs/deliverables/demo-video.srt)) |
-| [presentation-5min.mp4](docs/deliverables/presentation-5min.mp4) | A 5-minute silent version of the full talk: all 14 slides and the same demo, captioned with a condensed script ([.srt](docs/deliverables/presentation-5min.srt)) |
-| [presentation-10min.mp4](docs/deliverables/presentation-10min.mp4) | A 10-minute silent version: all 14 slides and the demo, captioned with the full speaker script ([.srt](docs/deliverables/presentation-10min.srt)) |
+| [presentation-video.mp4](docs/deliverables/presentation-video.mp4) | The 10-minute presentation video: all 14 slides plus a short demo with real output from the `threshold` and `test` commands, captioned with the full speaker script ([captions as .srt](docs/deliverables/presentation-video.srt)) |
 
-All three videos are silent, with captions burned in and also supplied as `.srt` files. The roadmap's presentation in the team's own voices is still recorded by the team from the slides and script; the 10-minute captions can serve as a teleprompter.
+The video is silent, with captions burned in and also supplied as an `.srt` file. If the team records the talk in their own voices, the captions can serve as a teleprompter.
 
 ## Data and endpoint
 

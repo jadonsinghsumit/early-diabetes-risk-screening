@@ -1,6 +1,6 @@
 # Presentation script
 
-Speaker notes for the 14-slide deck ([slides as PDF](presentation-slides.pdf)), one section per slide. About 1,528 words, roughly 9.5 to 10 minutes at a normal speaking pace. The [10-minute video](presentation-10min.mp4) shows these notes as captions over the slides; the [5-minute video](presentation-5min.mp4) uses a condensed version, and the 2-minute [demo video](demo-video.mp4) is a short summary. All three are silent.
+Speaker notes for the 14-slide deck ([slides as PDF](presentation-slides.pdf)), one section per slide. About 1,528 words, roughly 9.5 to 10 minutes at a normal speaking pace. The silent [presentation video](presentation-video.mp4) (10 minutes) shows these notes as captions over the slides.
 
 ## 1. Early Diabetes Risk Screening
 
