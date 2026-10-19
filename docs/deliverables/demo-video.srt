@@ -1,0 +1,55 @@
+1
+00:00:00,000 --> 00:00:06,000
+Early Diabetes Risk Screening: can self-reported survey answers find adults with diabetes or prediabetes?
+
+2
+00:00:06,000 --> 00:00:14,000
+253,680 adults, 21 answers each. Goal: catch 80% of cases while flagging as few people as possible.
+
+3
+00:00:14,000 --> 00:00:21,000
+Main outcome: prediabetes or diabetes (15.8% of people). Sensitivity check: prediabetes alone (2.1%).
+
+4
+00:00:21,000 --> 00:00:29,000
+One locked 80/20 split. Tuning, model choice and the cutoff used training rows only.
+
+5
+00:00:29,000 --> 00:00:37,000
+Every tuned model beats the paper risk checklist; XGBoost wins all five validation folds.
+
+6
+00:00:37,000 --> 00:00:45,000
+The screening cutoff (0.153) was locked on training data before the test set was opened.
+
+7
+00:00:45,000 --> 00:00:53,000
+Demo: the test command refuses to run until a cutoff has been locked for this exact split.
+
+8
+00:00:53,000 --> 00:01:01,000
+Demo: locking the cutoff on the 202,944 training rows (the test rows stay locked).
+
+9
+00:01:01,000 --> 00:01:10,000
+Demo: scoring the locked test set once. XGBoost finds 79.4% of cases and flags 37.6% of people.
+
+10
+00:01:10,000 --> 00:01:18,000
+Demo: the committed model and cutoff score two made-up people.
+
+11
+00:01:18,000 --> 00:01:27,000
+On 50,736 unseen people: 79.4% of cases found, 37.6% flagged, 96 fewer false alarms per 1,000 than the checklist.
+
+12
+00:01:27,000 --> 00:01:35,000
+It misses more younger and higher-income people, and finds prediabetes (65%) less often than diabetes (81%).
+
+13
+00:01:35,000 --> 00:01:42,000
+Self-reported, single-year survey data: a research prototype, not a diagnostic tool.
+
+14
+00:01:42,000 --> 00:01:49,000
+Fully reproducible: one command per stage and 63 automated tests. Code and reports are on GitHub.
