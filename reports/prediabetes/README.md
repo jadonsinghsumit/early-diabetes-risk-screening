@@ -16,4 +16,4 @@ This eligibility rule is recorded in the source provenance, along with the exact
 
 The target is current self-reported prediabetes. This survey has no follow-up outcome to evaluate future diabetes onset, and existing diabetes is not treated as a negative control. Associations may reflect confounding or survey design. They are not causal, diagnostic, or predictive-performance estimates.
 
-The cleaned row-level table stays locally under `outputs/prediabetes/cleaned.csv` and is excluded from Git. Reproduce the run from the uploaded ZIP using the root README. Stages 5–8 have not been implemented.
+The cleaned row-level table stays locally under `outputs/prediabetes/cleaned.csv` and is excluded from Git. Reproduce the run from the uploaded ZIP using the root README. The modeling stages (5–7) for this endpoint are in [reports/modeling/prediabetes](../modeling/README.md).

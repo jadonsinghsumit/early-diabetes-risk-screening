@@ -1,0 +1,57 @@
+{
+  "stage": 7,
+  "endpoint": "combined",
+  "input_sha256": "7e0e0421398c31ef23f8fe97a8a3479d5dfaf6735a6afe7ea6b1c5035654660f",
+  "split_sha256": "e8a579495ac84c636afd9aadee7b2e1d5273368b83e797089f1be6c6b805db7c",
+  "model": "xgboost",
+  "model_file": "xgboost.joblib",
+  "model_sha256": "22aaf6e26196d399df58357fba4af2a9045bcc203f0f114315466863c4a7c464",
+  "target_recall": 0.8,
+  "rule": "The highest cutoff on the selected model's out-of-fold predicted risks (training rows only) that still flags at least 80% of the training cases. The highest such cutoff flags the fewest people, so it is the cheapest way to meet the target. Fixed before any test row is read.",
+  "threshold": 0.1530025154352188,
+  "validation_at_threshold": {
+    "threshold": 0.1530025154352188,
+    "recall": 0.8000125070352073,
+    "precision": 0.3315794930278368,
+    "specificity": 0.6983072261672184,
+    "f2": 0.623768845201178,
+    "flagged_share": 0.38022311573636075,
+    "tp": 25586,
+    "fp": 51578,
+    "tn": 119384,
+    "fn": 6396,
+    "flagged_per_1000": 380.22311573636074,
+    "cases_per_1000": 157.59027120782088,
+    "cases_found_per_1000": 126.07418795332703,
+    "cases_missed_per_1000": 31.51608325449385,
+    "false_alarms_per_1000": 254.14892778303374
+  },
+  "calibration_rule": "Recalibrate (Platt scaling: a logistic regression of the outcome on the model's out-of-fold log-odds) only if the calibration slope is outside 0.9-1.1 or the calibration-in-the-large intercept is further than 0.1 from 0. Recalibration is monotone, so it never changes who is flagged, only the risk a person is told.",
+  "validation_calibration": {
+    "rows": 202944,
+    "observed_rate": 0.15759027120782088,
+    "mean_predicted_risk": 0.15759800916955183,
+    "brier": 0.10571720003111124,
+    "calibration_intercept": -7.352196025212825e-05,
+    "calibration_slope": 0.9923309341141279,
+    "platt": {
+      "intercept": -0.00908175084205401,
+      "slope": 0.9923309341141279
+    }
+  },
+  "recalibration": null,
+  "reference_operating_points": {
+    "ada_checklist": {
+      "threshold": 0.5,
+      "rule": "5 or more checklist points (the paper test's cutoff)"
+    },
+    "logistic_regression": {
+      "model_file": "logistic_regression.joblib",
+      "model_sha256": "5013a897187a0c05a04ddff2db228abe93a6afb0983439921a1cc651dc044ced",
+      "threshold": 0.14338855198572198,
+      "rule": "The highest cutoff on the reference model's out-of-fold predicted risks (training rows only) that still flags at least 80% of the training cases. The highest such cutoff flags the fewest people, so it is the cheapest way to meet the target. Fixed before any test row is read."
+    }
+  },
+  "training_rows_used": 202944,
+  "test_rows_used": 0
+}

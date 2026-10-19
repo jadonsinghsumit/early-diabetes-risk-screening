@@ -7,6 +7,15 @@
   "invalid_values_policy": "Fail on noninteger, nonfinite, out-of-codebook values",
   "duplicate_rationale": "Identical profiles may be different respondents; no respondent IDs are available",
   "transformations": "Preserve original codes and BMI/health days; no clipping, scaling, or balancing",
+  "review_flags": {
+    "HighChol=1 but CholCheck=0 (told cholesterol high without a check in five years)": 1981,
+    "BMI below 15": 68,
+    "BMI 50 or above": 2547,
+    "BMI 60 or above": 868,
+    "MentHlth == 30 (heaping at the top code)": 12088,
+    "PhysHlth == 30 (heaping at the top code)": 19400
+  },
+  "review_flags_policy": "Counts of valid but unusual or logically odd responses; reported only, no row is altered or removed",
   "distribution_summary": {
     "BMI": {
       "count": 253680.0,

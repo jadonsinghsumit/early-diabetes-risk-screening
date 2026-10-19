@@ -26,6 +26,7 @@ def test_prepare_preserves_rows_and_explicit_mapping(sample, tmp_path, endpoint,
     assert metadata["rows"] == 160
     assert metadata["original_target_counts"] == {"0": 80, "1": 40, "2": 40}
     assert metadata["derived_sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()
+    assert b"\r" not in output.read_bytes()  # same bytes, and so the same hash, on every platform
     assert not metadata["is_official_binary_file"]
     with pytest.raises(FileExistsError):
         prepare_binary(path, output, endpoint, expected_rows=160)
