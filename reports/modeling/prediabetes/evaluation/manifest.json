@@ -1,0 +1,28 @@
+{
+  "stage": "7b",
+  "endpoint": "prediabetes",
+  "input_sha256": "33018d988b7abcc627bc03717a0dfb8a2c7685814776a83182e7bbf16e7978e3",
+  "split_sha256": "7632682314c1f0cbbc9c533f96846ab634ea2e15661ff69d79f1f11fd9aefbc4",
+  "threshold_file_sha256": "452edd920e0d03549339edffbb57a4b3108cf28d5dbb46b5120eea5e2b82609c",
+  "model": "xgboost",
+  "model_sha256": "2efdd41db10038c4d95bb5d639c3100936387664e355daa3981a381e437d0cdd",
+  "threshold": 0.017168918624520302,
+  "test_rows_used": 43667,
+  "training_rows_used": 0,
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 42,
+    "interval": "95% percentile, cutoff held fixed"
+  },
+  "original_classes_checked": true,
+  "python": "3.13.9",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "statsmodels": "0.15.0"
+  }
+}
