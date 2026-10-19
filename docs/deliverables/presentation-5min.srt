@@ -1,0 +1,151 @@
+1
+00:00:00,000 --> 00:00:02,465
+Early Diabetes Risk Screening.
+
+2
+00:00:02,465 --> 00:00:13,028
+Our question: can the answers adults give on a health survey pick out people who have diabetes or prediabetes, while missing as few of them as possible?
+
+3
+00:00:13,028 --> 00:00:19,366
+We used the CDC’s 2015 BRFSS survey of about a quarter of a million adults.
+
+4
+00:00:19,366 --> 00:00:28,169
+Each of the 253,680 adults gave 21 answers, from blood pressure and BMI to age and income; 15.8% report diabetes or prediabetes.
+
+5
+00:00:28,169 --> 00:00:38,380
+A missed case is the costly mistake, so we fixed the target at catching 80% of cases and compared approaches by how many people they flag.
+
+6
+00:00:38,380 --> 00:00:43,662
+The bar to clear is the paper risk test clinics already use.
+
+7
+00:00:43,662 --> 00:00:53,521
+We used the three-class file so that prediabetes could count as positive: it is exactly what screening should catch. The roadmap’s 14% is diabetes alone.
+
+8
+00:00:53,521 --> 00:01:03,028
+A sensitivity analysis looks at prediabetes on its own, where only 2.1% are positive. There were no missing values, and every respondent was kept.
+
+9
+00:01:03,028 --> 00:01:10,070
+The same five answers stand out: general health, high blood pressure, BMI, difficulty walking and high cholesterol.
+
+10
+00:01:10,070 --> 00:01:17,464
+All 25 planned tests were significant, which says little with this many people, so we read effect sizes.
+
+11
+00:01:17,464 --> 00:01:23,802
+The largest odds ratio, for having had a cholesterol check, mostly reflects contact with doctors.
+
+12
+00:01:23,802 --> 00:01:34,013
+One 80/20 split was fixed for the whole team, and the test rows stayed locked: the code refuses to release them until a cutoff is saved.
+
+13
+00:01:34,013 --> 00:01:43,520
+Scaling happens inside the model pipelines. Repeated answers did not leak, and class weighting only inflated the risks, so we chose the cutoff ourselves.
+
+14
+00:01:43,520 --> 00:01:49,506
+We tuned logistic regression, a random forest and XGBoost on the same five folds.
+
+15
+00:01:49,506 --> 00:01:58,661
+Every model clearly beats the paper checklist, which flags half of everyone to catch 80% of cases; the models flag 38 to 39%.
+
+16
+00:01:58,661 --> 00:02:04,999
+Under a rule written before the run, XGBoost was chosen: it won all five folds.
+
+17
+00:02:04,999 --> 00:02:11,337
+All three models rely on BMI, general health, age, high blood pressure and high cholesterol.
+
+18
+00:02:11,337 --> 00:02:18,379
+Adjusted odds ratios show why one-at-a-time comparisons mislead: bad physical-health days reverse once general health is included,
+
+19
+00:02:18,379 --> 00:02:22,956
+and the smoking association disappears. These are associations, not causes.
+
+20
+00:02:22,956 --> 00:02:29,998
+The cutoff was chosen on training data only, from predictions by models that never saw each person.
+
+21
+00:02:29,998 --> 00:02:36,336
+The highest cutoff that still catches 80% of cases is a predicted risk of 0.153.
+
+22
+00:02:36,336 --> 00:02:44,435
+Calibration was already excellent, so no adjustment was needed, and the cutoff was saved before the test set was opened.
+
+23
+00:02:44,435 --> 00:02:52,181
+Demo: without a saved cutoff, the test command refuses to run. This is what keeps the test set honest.
+
+24
+00:02:52,181 --> 00:02:58,871
+Demo: the threshold command reads only the 202,944 training rows and locks the cutoff at 0.1530.
+
+25
+00:02:58,871 --> 00:03:07,674
+Demo: the locked test set is scored once. XGBoost finds 79.4% of cases and flags 37.6% of people; the checklist flags 47.3%.
+
+26
+00:03:07,674 --> 00:03:15,068
+Demo: the committed model scores two made-up people, and the full test suite passes: 63 tests, 98% coverage.
+
+27
+00:03:15,068 --> 00:03:25,983
+On 50,736 people the model never saw, it found 79.4% of cases, right on target, and flagged 37.6% of people; one in three of them has the condition.
+
+28
+00:03:25,983 --> 00:03:32,673
+That is 96 fewer false alarms per thousand than the checklist, and the scores match validation.
+
+29
+00:03:32,673 --> 00:03:41,828
+Per 1,000 people screened, about 158 have the condition. The model sends 376 for a blood test, finds 125 cases and misses 33.
+
+30
+00:03:41,828 --> 00:03:50,279
+The checklist finds the same number but sends almost 100 more people, and logistic regression captures about 90% of the gain.
+
+31
+00:03:50,279 --> 00:03:59,786
+Missed cases look like people without the condition: ordinary BMI and good reported health. Sensitivity is 44% for under-45s and 68% at higher incomes.
+
+32
+00:03:59,786 --> 00:04:07,180
+The model finds 81% of diagnosed diabetes but only 65% of prediabetes, the group screening is really for.
+
+33
+00:04:07,180 --> 00:04:13,870
+Looking for prediabetes alone, the model still beats the checklist, finding 81% of cases against 70%.
+
+34
+00:04:13,870 --> 00:04:24,081
+But it flags 44% of everyone, and only 4% of those flagged report prediabetes. Many of them may be undiagnosed cases, which this survey cannot show.
+
+35
+00:04:24,081 --> 00:04:32,180
+The labels are self-reported at one moment, 88% of positives already have a diagnosis, some answers reflect seeing a doctor,
+
+36
+00:04:32,180 --> 00:04:41,687
+one cutoff gives groups different trade-offs, and the survey is unweighted. So this is a research prototype for risk stratification, not a diagnostic tool.
+
+37
+00:04:41,687 --> 00:04:50,842
+With survey answers alone, the model finds eight in ten cases while sending a fifth fewer people for testing than the paper checklist.
+
+38
+00:04:50,842 --> 00:05:00,000
+Every step is reproducible, with one command per stage and 63 automated tests. The code, notebooks and reports are on GitHub. Thank you.

@@ -44,8 +44,10 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 | [presentation-slides.pdf](docs/deliverables/presentation-slides.pdf) | The 14-slide presentation |
 | [presentation-script.md](docs/deliverables/presentation-script.md) | Speaker notes for those slides, about 9.5–10 minutes |
 | [demo-video.mp4](docs/deliverables/demo-video.mp4) | A 1 minute 49 second silent demo with captions: the story in slides, plus real output from the `threshold` and `test` commands ([captions as .srt](docs/deliverables/demo-video.srt)) |
+| [presentation-5min.mp4](docs/deliverables/presentation-5min.mp4) | A 5-minute silent version of the full talk: all 14 slides and the same demo, captioned with a condensed script ([.srt](docs/deliverables/presentation-5min.srt)) |
+| [presentation-10min.mp4](docs/deliverables/presentation-10min.mp4) | A 10-minute silent version: all 14 slides and the demo, captioned with the full speaker script ([.srt](docs/deliverables/presentation-10min.srt)) |
 
-The demo video is a short summary, not the 8–10 minute team presentation the roadmap asks for; that one is recorded by the team from the slides and script.
+All three videos are silent, with captions burned in and also supplied as `.srt` files. The roadmap's presentation in the team's own voices is still recorded by the team from the slides and script; the 10-minute captions can serve as a teleprompter.
 
 ## Data and endpoint
 
