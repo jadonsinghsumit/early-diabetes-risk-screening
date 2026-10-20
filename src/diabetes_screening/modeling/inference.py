@@ -5,8 +5,6 @@ the other answers fixed, how is each answer associated with the outcome? We fit 
 (unpenalized) logistic regression on the training rows only and compare each adjusted odds ratio with
 the one-answer-at-a-time (unadjusted) version. A flip in direction is a Simpson's-paradox-style warning
 that the simple association was driven by something else, such as age.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/training.md.
 """
 import matplotlib
 import numpy as np

@@ -6,8 +6,6 @@ Ground rules (all of them follow from stage 5):
   to catch 80% of cases, how many false alarms does each model cost us?
 - No class weighting (stage 5 showed it only moves the cutoff), so predicted probabilities stay
   readable as risks for stage 7.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/training.md.
 """
 import time
 

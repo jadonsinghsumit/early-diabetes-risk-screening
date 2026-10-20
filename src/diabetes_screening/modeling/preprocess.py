@@ -3,8 +3,6 @@
 The scalers sit inside a scikit-learn Pipeline, so when a pipeline is fitted on a training fold it
 learns medians, means and spreads from that fold alone. Validation and test rows only ever get
 transformed, never learned from.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer

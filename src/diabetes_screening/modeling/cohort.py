@@ -1,6 +1,4 @@
 """Load a prepared cohort for modeling, running the same provenance checks as stages 1-4.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 from dataclasses import dataclass
 

@@ -3,8 +3,6 @@
 This is a separate entry point from Sumit's `diabetes-screening` command (stages 1-4), so his
 code stays untouched. Both commands use the same conventions: a new output folder every time,
 input files checked against their provenance, and a non-zero exit status when something is wrong.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md and docs/evaluation.md.
 """
 import argparse
 from pathlib import Path

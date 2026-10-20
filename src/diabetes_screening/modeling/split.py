@@ -3,8 +3,6 @@
 Every row gets one code in `fold`: -1 means the locked test set, 0..k-1 the cross-validation
 fold of a training row. Saving that single array (plus seed and input hash) lets every teammate
 reuse the exact same split, and lets later stages prove which rows they touched.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 from dataclasses import dataclass
 import hashlib

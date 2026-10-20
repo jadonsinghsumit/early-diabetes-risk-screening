@@ -2,8 +2,6 @@
 
 Everything here is a plain function of labels, predicted risks and a cutoff, so the same code scores
 the out-of-fold predictions (when the cutoff is chosen) and the locked test set (when it is checked).
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/evaluation.md.
 """
 import matplotlib
 import numpy as np

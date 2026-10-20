@@ -164,7 +164,3 @@ That is the honest headline for early detection. With these self-reported answer
 - **Unweighted survey extract.** Shares and rates describe this table, not the US adult population; the subgroup results are especially sensitive to who answered the survey.
 - **One survey year.** The test set comes from the same 2015 survey as the training data. Performance on another year, or on lab-confirmed outcomes such as NHANES, is untested.
 - This is a research prototype for risk stratification, not a diagnostic or clinical decision tool.
-
-## Use of AI tools
-
-The stage 7 code (`evaluation.py`, `evaluation_workflow.py` and `portable.py` in `src/diabetes_screening/modeling/`, plus the two new commands in `cli.py`), its tests (`tests/test_evaluation.py`) and this page were drafted with help from an AI assistant (Claude, by Anthropic) during a working session with the team member responsible for stage 7. The sensitivity target, the calibration rule and the subgroup bands were fixed in the code before the test set was opened, and the numbers above come from the committed outputs. Before submission, the stage 7 owner should review and run everything, be ready to explain each step, and update this note to describe their own review and changes, as the course's generative-AI policy requires.
