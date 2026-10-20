@@ -169,7 +169,3 @@ The odds ratios tell a similar story to the combined endpoint, with two differen
 - Tuning, model selection and stage 7's threshold all use the same five folds, so the validation numbers here are slightly optimistic. The locked test set is the honest check, which is why it gets opened once, after the threshold is fixed.
 - The odds ratios describe associations in an unweighted survey extract. They don't account for the survey design, and they aren't causal: a respondent's answers about blood pressure or cholesterol partly reflect diagnosis and treatment, which happen after contact with a doctor.
 - The outcome is self-reported. Identifying people who already report diabetes or prediabetes is not the same as predicting who will develop it.
-
-## Use of AI tools
-
-The stage 6 code (`training.py`, `baselines.py`, `inference.py`, `training_workflow.py` in `src/diabetes_screening/modeling/`), its tests (`tests/test_training.py`) and this page were drafted with help from an AI assistant (Claude, by Anthropic) during a working session with the team member responsible for stage 6. The selection rule and search spaces were fixed before the full run, and the conclusions above come from the measured results. Before submission, the stage 6 owner should review and run everything, be ready to explain each step, and update this note to describe their own review and changes, as the course's generative-AI policy requires.

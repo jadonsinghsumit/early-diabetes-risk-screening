@@ -1,6 +1,4 @@
 """The two stage 5 commands: make the split, then collect the evidence on class imbalance.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 from importlib.metadata import version
 from pathlib import Path

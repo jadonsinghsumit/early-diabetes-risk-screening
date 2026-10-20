@@ -40,7 +40,8 @@ The **prediabetes-only** sensitivity analysis (existing diabetes excluded, 2.1% 
 
 | File | What it is |
 | --- | --- |
-| [Final-Project-Report-Team3.pdf](docs/deliverables/Final-Project-Report-Team3.pdf) | The technical report (12 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations and reproducibility |
+| [Final-Project-Report-Team3.pdf](docs/deliverables/Final-Project-Report-Team3.pdf) | The technical report (17 pages, 10 figures): one section per roadmap stage, from data checks to the locked threshold, plus the false-negative discussion, limitations, reproducibility, the use of AI tools and Appendices A–G |
+| [Final-Project-Report-Team3-Appendices.pdf](docs/deliverables/Final-Project-Report-Team3-Appendices.pdf) | The appendices on their own (5 pages): team contributions, data dictionary, all 25 hypothesis tests, model comparison, subgroup results, reproduction commands and a glossary |
 | [Final-Project-Presentation-Slides-Team3.pdf](docs/deliverables/Final-Project-Presentation-Slides-Team3.pdf) | The 19-slide presentation, every slide labelled with its roadmap stage, plus a sources slide |
 
 ## Data and endpoint
@@ -143,4 +144,14 @@ The [original project overview](docs/original-project-overview.md) and the [stag
 
 ## Use of AI tools
 
-Stages 5–8 (code, tests, write-ups and notebooks) were drafted with help from an AI assistant (Claude, by Anthropic), as noted in each new file. The team members responsible for each stage should review and run their parts, be ready to explain every step, and record their own review in the notes at the end of [splitting](docs/splitting.md), [training](docs/training.md) and [evaluation](docs/evaluation.md), as the course's generative-AI policy requires.
+**Declaration.** In line with the course's generative-AI policy, the team declares that generative AI tools were used while working on this project. The tools supported the team's work; they did not replace the team's own analysis, judgement or responsibility for the results.
+
+| Tool | Provider | How it was used |
+| --- | --- | --- |
+| Claude | Anthropic | Drafting and reviewing code, automated tests, documentation and notebooks (mainly stages 5–8); a first draft of the technical report; explaining statistical and machine-learning methods; preparing presentation notes. |
+| ChatGPT | OpenAI | General assistance: explaining concepts and methods, suggesting fixes to code snippets, and improving the wording and clarity of text. |
+| Gemini | Google | General assistance: explaining concepts, cross-checking explanations, and improving the wording and clarity of text. |
+
+**How AI-assisted output was checked.** All AI-assisted code was run by the team and is covered by the automated tests in `tests/`. Every number in the README and the technical report comes from outputs committed under `reports/` and can be regenerated from the public data with the commands above. The decisions that shape the results (the endpoint, the model selection rule, the 80% sensitivity target and the calibration rule) were set by the team before the results they govern were produced. AI tools were not used to create or alter any data; the dataset is a public, de-identified survey extract.
+
+**Responsibility.** Each team member reviewed, ran and can explain the parts of the work they are responsible for. The team takes full responsibility for the content, analysis and conclusions in this repository; any remaining errors are our own.

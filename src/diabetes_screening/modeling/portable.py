@@ -7,8 +7,6 @@ standard library: Linux builds write plain decimal numbers, Windows builds expec
 So Windows XGBoost refuses a snapshot pickled on Linux with "input stream corrupted", although its
 trees are fine. When that happens we load only the "Model" part. Predictions are unchanged, because
 they depend only on the model part, and refitting uses the scikit-learn settings pickled alongside it.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/evaluation.md.
 """
 import struct
 

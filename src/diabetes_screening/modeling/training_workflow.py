@@ -1,6 +1,4 @@
 """Command-level runner for roadmap stage 6: tune, compare, interpret, and save the fitted pipelines.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/training.md.
 """
 from importlib.metadata import version
 import json

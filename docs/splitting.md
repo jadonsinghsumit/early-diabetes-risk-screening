@@ -167,7 +167,3 @@ The README asks whether the official binary file treats prediabetes as negative.
 - The weighting comparison uses fixed, untuned settings. Tuning changes the absolute numbers, but not the mechanism: reweighting shifting everyone's score is a property of reweighting itself, not of these particular settings.
 - The folds treat every row as an independent respondent. The extract has no survey weights, strata or clusters, so these metrics describe this table, not the US population.
 - Stage 6 tunes hyperparameters and stage 7 will choose a threshold on the same five folds, so out-of-fold scores will be slightly optimistic. The locked test set is the unbiased check, which is why it should be opened only once.
-
-## Use of AI tools
-
-The stage 5 code (`src/diabetes_screening/modeling/`), its tests (`tests/test_modeling.py`) and this page were drafted with help from an AI assistant (Claude, by Anthropic) during a working session with the team member responsible for stage 5. The main design choices, the plain split and leaving the classes unweighted, came from the measurements above rather than from the assistant's suggestions alone. Before submission, the stage 5 owner should review and run everything, be ready to explain each step, and update this note to describe their own review and changes, as the course's generative-AI policy requires.

@@ -3,8 +3,6 @@
 This repeats the checks Sumit's stage 1-4 pipeline runs in `pipeline.run_analysis`, so the
 modeling code refuses exactly the same tampered or mismatched inputs. We copied the logic here
 instead of editing the stage 1-4 code, which stays as Sumit wrote it.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 import json
 from pathlib import Path

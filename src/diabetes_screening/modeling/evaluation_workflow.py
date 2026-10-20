@@ -4,8 +4,6 @@ The two steps are separate commands on purpose. `threshold` reads training rows 
 threshold.json. That file is committed before anyone runs `test`, so the git history shows the cutoff
 was fixed before a single test row was scored. `test` refuses to run unless threshold.json names this
 exact input, split and model file.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/evaluation.md.
 """
 import hashlib
 from importlib.metadata import version

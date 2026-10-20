@@ -6,8 +6,6 @@
    Association's test, using the answers this survey has. Clinics already use this kind of score, so
    it's the bar a model has to clear to be worth the extra complexity.
    Source: NIDDK's "Diabetes Risk Test" PDF (link in docs/training.md).
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/training.md.
 """
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin

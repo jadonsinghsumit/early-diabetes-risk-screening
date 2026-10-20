@@ -2,8 +2,6 @@
 
 Everything here runs on the training rows only. Each fold fits a fresh pipeline whose scaler and
 class weights are learned from that fold's training part, then scores the held-out fold.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 import time
 

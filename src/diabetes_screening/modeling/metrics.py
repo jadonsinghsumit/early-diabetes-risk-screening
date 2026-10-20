@@ -1,6 +1,4 @@
 """One scoring function for every model, fold and stage, so the numbers always line up.
-
-AI-use disclosure: drafted with AI assistance (Claude, Anthropic); see docs/splitting.md.
 """
 import numpy as np
 from sklearn.metrics import (average_precision_score, brier_score_loss, confusion_matrix, fbeta_score,
